@@ -1,0 +1,12 @@
+{
+  "name": "YOUR_PACKAGE_NAME",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "springbokjs-base": "^0.4.12",
+    "springbokjs-shim": "^0.1.15",
+    "express": "^4.2.0",
+    "connect-livereload": "^0.4.0",
+    "ejs": "^1.0.0"
+  }
+}
