@@ -19,4 +19,8 @@ module.exports = function(argv) {
     io.set('close timeout',120);
     io.set('heartbeat timeout',120);
     io.set('heartbeat interval',300);
+
+    io.sockets.on('connection', function(socket) {
+        
+    });
 };
