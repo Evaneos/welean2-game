@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+global.S = require('springbokjs-utils');
+
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
@@ -8,6 +10,8 @@ var argv = require('minimist')(process.argv.slice(2), {
         'production': 'prod'
     }
 });
+
+require('./socket.js')(argv);
 
 if (!argv.production) {
     console.log('Dev mode');
