@@ -2,6 +2,9 @@
   "name": "welean2-game",
   "private": true,
   "version": "0.0.1",
+  "scripts": {
+    "test": "node_modules/.bin/mocha -u tdd"
+  },
   "dependencies": {
     "body-parser": "^1.2.0",
     "connect-livereload": "^0.4.0",
@@ -14,5 +17,9 @@
     "springbokjs-base": "^0.4.14",
     "springbokjs-shim": "^0.1.15",
     "springbokjs-utils": "^0.3.9"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2",
+    "proclaim": "^2.0.0"
   }
 }
