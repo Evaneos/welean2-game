@@ -1,5 +1,4 @@
 global.S = require('springbokjs-utils');
-require('springbokjs-shim/es6');
 
 var assert = require('proclaim');
 var expect = assert.strictEqual;

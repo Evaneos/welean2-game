@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "test": "node_modules/.bin/mocha -u tdd"
+    "test": "node_modules/.bin/mocha --harmony -u tdd"
   },
   "dependencies": {
     "body-parser": "^1.2.0",
@@ -15,7 +15,6 @@
     "minimist": "^0.1.0",
     "socket.io": "^0.9.16",
     "springbokjs-base": "^0.4.14",
-    "springbokjs-shim": "^0.1.15",
     "springbokjs-utils": "^0.3.9"
   },
   "devDependencies": {
