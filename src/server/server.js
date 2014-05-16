@@ -11,6 +11,7 @@ var argv = require('minimist')(process.argv.slice(2), {
 });
 
 var app = express();
+var server = require('http').createServer(app);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
