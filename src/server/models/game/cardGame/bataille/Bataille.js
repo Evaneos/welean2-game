@@ -7,34 +7,34 @@ module.exports = Bataille;
 Bataille.defineProperty("gameKey", "bataille");
 
 Bataille.extendPrototype({
-	construct(socket, token) {
-		Bataille.superConstruct.call(this, socket, token, 4, 2);
+    construct(socket, token) {
+        Bataille.superConstruct.call(this, socket, token, 4, 2);
     },
     buildDeck() {
-    	console.log("Building deck...");
-    	return new ClassicDeck(52);
+        console.log("Building deck...");
+        return new ClassicDeck(52);
     },
     run() {
-    	console.log("Let's Play Bataille !");
+        console.log("Let's Play Bataille !");
     },
     winningCards(cards) {
-    	var winning = [];
-    	var referenceCard = cards.pop();
-    	cards.forEach((card)=>{
-    		var score = this.compareCards(referenceCard, card);
-    		if (score>1) {
-    			winning = [];
-    			referenceCard = card;
-    		} else if (score===0) {
-    			winning.push(card);
-    		}
-    	});
-    	winning.push(referenceCard);
+        var winning = [];
+        var referenceCard = cards.pop();
+        cards.forEach((card)=>{
+            var score = this.compareCards(referenceCard, card);
+            if (score>1) {
+                winning = [];
+                referenceCard = card;
+            } else if (score===0) {
+                winning.push(card);
+            }
+        });
+        winning.push(referenceCard);
 
-    	return winning;
+        return winning;
     },
     compareCards(reference, other) {
-    	//TODO
-    	return -1;
+        //TODO
+        return -1;
     }
 });
