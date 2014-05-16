@@ -1,15 +1,19 @@
+<<<<<<< HEAD
 require('springbokjs-shim/es6');
+=======
+global.S = require('springbokjs-utils');
+>>>>>>> 85665f674b18acf6abbb1dc28044c0e1405e4b01
 
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
-var token2app = require('./token.js');
-
-global.S = require('springbokjs-utils');
 var generator = require('springbokjs-utils/generator');
 
-var User = require('./models/common/User.js');
+var SocketApplication = require('./models/sockets/Application');
+var SocketUser = require('./models/sockets/User');
+var SocketMainboard = require('./models/sockets/Mainboard');
+
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -37,30 +41,17 @@ app.locals.basepath = argv.basepath || '/';
 
 require('./socket')(server, function(io) {
     io.sockets.on('connection', function(socket) {
-        var user, game;
-
         socket.on('room:join', function(data) {
-            if (game) {
-                throw new Error('room:join already called for this game');
+            var game = SocketApplication.getOrCreate(data.token);
+            if (!game) {
+                throw new Error("Impossible de créer l'application");
             }
-
-            game = token2app[data.token];
+            //TODO factory in SocketApplication
 
             if (data.client == 'board') {
-                game.socket = socket;
+                new SocketMainboard(game, socket, data);
             } else if (data.client == 'device') {
-                if (user) {
-                    throw new Error('room:join already called for this user');
-                }
-
-                user = new User(socket, data.username);
-                game.join(user);
-            }
-        });
-
-        socket.on('room:quit', function(data) {
-            if (data.client == 'device') {
-                game.quit(user);
+                new SocketUser(game, socket, data);
             }
         });
     });
