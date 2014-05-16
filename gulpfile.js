@@ -16,6 +16,9 @@ require('springbokjs-base/gulptask.js')(pkg, gulp, {
     jshintBrowserOptions: {
         "predef": [ "S" ]
     },
+    jshintServerOptions: {
+        "predef": [ "S" ]
+    },
 });
 
 

@@ -27,7 +27,9 @@ if (!argv.production) {
     console.log('Production mode');
 }
 
-app.get('*', (req, res) => res.render('index', { URL: req.path }));
+app.get('/', (req, res) => {
+    res.render('index', { URL: req.path });
+});
 
 app.use(express.static(__dirname +'/../../public'));
 
