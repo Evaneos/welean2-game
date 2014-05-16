@@ -65,7 +65,20 @@ app.post('/:gameKey/create', (req, res) => {
 
 // From the smartphone
 app.get('/play/:token', (req, res) => {
-    res.render('device/index', { });
+    var user = req.cookies.user;
+    if (!user) {
+        res.render('device/auth', { });
+    } else {
+        res.render('device/index', { name: user.name });
+    }
+});
+
+app.post('/play/:token', (req, res) => {
+    var name = req.body && req.body.name;
+    if (name) {
+        res.cookie('user', { name: name });
+    }
+    res.redirect(req.path);
 });
 
 app.use(express.static(__dirname +'/../../public'));
