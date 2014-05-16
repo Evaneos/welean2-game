@@ -6,7 +6,7 @@ module.exports = CardGame;
 
 CardGame.extendPrototype({
 	construct(socket, token, usersMax, usersMin) {
-		CardGame.superContruct.apply(this, arguments);
+		CardGame.superConstruct.apply(this, arguments);
 		this.deck = this.buildDeck();
     },
     run() {
