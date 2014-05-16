@@ -1,6 +1,6 @@
-var io = require('socket.io');
+var socketio = require('socket.io');
 module.exports = function(argv) {
-    io.listen(argv.websocketPort || 3300);
+    var io = socketio.listen(argv.websocketPort || 3300);
 
     /* #if PROD */
     /*io.enable('browser client minification'); // send minified client
@@ -21,6 +21,6 @@ module.exports = function(argv) {
     io.set('heartbeat interval',300);
 
     io.sockets.on('connection', function(socket) {
-        
+
     });
 };
