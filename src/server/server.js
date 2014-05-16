@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded());
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket.js')(argv);
+require('./socket.js')(server);
 
 if (!argv.production) {
     console.log('Dev mode');
@@ -70,4 +70,4 @@ app.get('/:token', (req, res) => {
 app.use(express.static(__dirname +'/../../public'));
 
 var port = argv.port || 3000;
-app.listen(port, console.log.bind(null, 'Listening on port ' + port));
+server.listen(port, console.log.bind(null, 'Listening on port ' + port));
