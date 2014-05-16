@@ -1,5 +1,6 @@
-var express = require('express');
-var app = express();
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app);
 global.S = require('springbokjs-utils');
 
 app.set('view engine', 'ejs');
@@ -13,7 +14,7 @@ var argv = require('minimist')(process.argv.slice(2), {
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket.js')(argv);
+require('./socket.js')(server);
 
 if (!argv.production) {
     console.log('Dev mode');
@@ -34,4 +35,4 @@ app.get('/', (req, res) => {
 app.use(express.static(__dirname +'/../../public'));
 
 var port = argv.port || 3000;
-app.listen(port, console.log.bind(null, 'Listening on port ' + port));
+server.listen(port, console.log.bind(null, 'Listening on port ' + port));
