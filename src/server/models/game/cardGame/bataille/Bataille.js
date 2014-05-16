@@ -10,6 +10,7 @@ Bataille.defineProperty("gameKey", "bataille");
 Bataille.extendPrototype({
     construct(socket, token) {
         Bataille.superConstruct.call(this, socket, token, 4, 2);
+        this.toWin = [];
     },
     buildDeck() {
         console.log("Building deck...");
@@ -17,6 +18,12 @@ Bataille.extendPrototype({
     },
     run() {
         console.log("Let's Play Bataille !");
+        this.shuffle();
+        this.startRound();
+    },
+    cardPlayed(card) {
+        this.currentCards.push(card);
+        this.toWin.push(card);
     },
     winningCards(cards) {
         var winning = [];

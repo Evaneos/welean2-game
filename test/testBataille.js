@@ -36,7 +36,7 @@ test('test Bataille', function() {
     
     bataille.winningCards(cards);
     
-    bataille.run();
+    bataille.start();
     
     
     var aceHearts = new ClassicCard("Ace of Hearts", ClassicCard.values.ACE, ClassicCard.colors.HEARTS);
