@@ -15,23 +15,22 @@ var argv = require('minimist')(process.argv.slice(2), {
 var app = express();
 
 
-var router = require('./router.js');
-router.app = app;
-
-router.load(require('./config/route.js'));
-
-
-
 var server = require('http').createServer(app);
+
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 app.use(cookieParser(argv.production ? generator.randomCode(12) : undefined));
 app.use(bodyParser.urlencoded());
 
+var router = require('./router.js');
+router.app = app;
+router.load(require('./config/route.js'));
+
+
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket.js')(server);
+require('./socket')(server);
 
 if (!argv.production) {
     console.log('Dev mode');
@@ -44,10 +43,6 @@ if (!argv.production) {
 } else {
     console.log('Production mode');
 }
-
-
-var token2app = require('./token.js');
-
 
 app.use(express.static(__dirname +'/../../public'));
 

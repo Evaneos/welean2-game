@@ -1,11 +1,11 @@
 install:
 	npm install
-	bower install
+	bower --allow-root install
 	gulp springbokjs-shim
 
 update:
 	npm update
-	bower update
+	bower --allow-root update
 	gulp springbokjs-shim
 
 clean:
@@ -14,4 +14,4 @@ clean:
 	gulp springbokjs-shim
 
 watch:
-	gulp watch
+	gulp  watch

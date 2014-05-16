@@ -14,14 +14,14 @@ module.exports = {
             controller : 'roomcreate'
         },
         {
-            url     :  '/:token',
+            url     :  '/play/:token',
             method  : 'get',
-            controller : 'smartphone'
+            controller : 'smartphone-get'
         },
         {
-            url     :  '/',
-            method  : 'get',
-            controller : 'test'
+            url     :  '/play/:token',
+            method  : 'post',
+            controller : 'smartphone-post'
         }
     ]
 };
