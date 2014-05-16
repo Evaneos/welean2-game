@@ -15,6 +15,25 @@ body{
     width: 1000px;
 }
 
+@media only screen 
+    and (min-device-width : 320px) 
+    and (max-device-width : 480px) {
+    /* Styles */
+    body{
+        /* @include webkitAntialiased; */
+        /* http://stackoverflow.com/questions/11589985/webkit-text-aliasing-gets-weird-during-css3-animations */
+        -webkit-backface-visibility: hidden;
+
+        background: #646;
+        color: #FFF;
+
+        margin: 0;
+        width: 100%;
+        font-size: 100% !important;
+    }
+
+}
+
 input, textarea{
     font: normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
