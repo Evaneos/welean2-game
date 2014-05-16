@@ -1,15 +1,21 @@
 var express = require('express');
-var app = express();
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 global.S = require('springbokjs-utils');
-
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+var generator = require('springbokjs-utils/generator');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
         'production': 'prod'
     }
 });
+
+var app = express();
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
+app.use(cookieParser(argv.production ? generator.randomCode(12) : undefined));
+app.use(bodyParser.urlencoded());
 
 app.locals.basepath = argv.basepath || '/';
 
@@ -27,8 +33,38 @@ if (!argv.production) {
     console.log('Production mode');
 }
 
+
+var token2app = {};
+
+// Home page, for the roomboard
 app.get('/', (req, res) => {
-    res.render('index', { URL: req.path });
+    res.render('index', { });
+});
+
+
+// Creation of the game (from the roomboard)
+app.post('/:gameKey/create', (req, res) => {
+    var gameKey = req.params.gameKey;
+    console.log(gameKey);
+
+    var token, i = 0;
+    while (!token && token2app[token]) {
+        token = generator.randomCode(7);
+        if (i++ > 20) {
+            return res.json(500, { error: 'Failed to generate token' });
+        }
+    }
+
+    // Create an Application with a Room, ready to receive sockets
+    var app = null;
+
+    token2app[token] = app;
+    res.json({ token: token });
+});
+
+// From the smartphone
+app.get('/:token', (req, res) => {
+
 });
 
 app.use(express.static(__dirname +'/../../public'));
