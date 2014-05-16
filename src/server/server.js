@@ -1,3 +1,4 @@
+require('springbokjs-shim/es6');
 global.S = require('springbokjs-utils');
 
 var express = require('express');
