@@ -48,6 +48,10 @@ Room.extendPrototype({
     	}
     },
     ready() {
+    	if (this.state === Room.states.WAITING_FOR_USERS) {
+    		return false;
+    	}
+    	
     	this.users.forEach((element, index) => {
     		if (!element.ready()) {
     			return false;
