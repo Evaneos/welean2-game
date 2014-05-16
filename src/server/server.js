@@ -11,6 +11,8 @@ var argv = require('minimist')(process.argv.slice(2), {
     }
 });
 
+app.locals.basepath = argv.basepath || '/';
+
 require('./socket.js')(argv);
 
 if (!argv.production) {
@@ -25,7 +27,7 @@ if (!argv.production) {
     console.log('Production mode');
 }
 
-app.get('*', (req, res) => res.render('index', { basepath: argv.basepath || '/', URL: req.path }));
+app.get('*', (req, res) => res.render('index', { URL: req.path }));
 
 app.use(express.static(__dirname +'/../../public'));
 
