@@ -1,6 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var path = require('path');
+
 global.S = require('springbokjs-utils');
 var generator = require('springbokjs-utils/generator');
 
@@ -11,6 +13,15 @@ var argv = require('minimist')(process.argv.slice(2), {
 });
 
 var app = express();
+
+
+var router = require('./router.js');
+router.app = app;
+
+router.load(require('./config/route.js'));
+
+
+
 var server = require('http').createServer(app);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -28,45 +39,15 @@ if (!argv.production) {
         port: argv.livereloadPort
     }));
     ['src', 'node_modules'].forEach((folder) => {
-        app.use('/' + folder, express.static(__dirname +'/../../' + folder));
+        app.use('/' + folder, express.static(path.normalize(__dirname +'/../../' + folder)));
     });
 } else {
     console.log('Production mode');
 }
 
 
-var token2app = {};
+var token2app = require('./token.js');
 
-// Home page, for the roomboard
-app.get('/', (req, res) => {
-    res.render('index', { });
-});
-
-
-// Creation of the game (from the roomboard)
-app.post('/:gameKey/create', (req, res) => {
-    var gameKey = req.params.gameKey;
-    console.log(gameKey);
-
-    var token, i = 0;
-    while (!token && token2app[token]) {
-        token = generator.randomCode(7);
-        if (i++ > 20) {
-            return res.json(500, { error: 'Failed to generate token' });
-        }
-    }
-
-    // Create an Application with a Room, ready to receive sockets
-    var app = null;
-
-    token2app[token] = app;
-    res.json({ token: token });
-});
-
-// From the smartphone
-app.get('/:token', (req, res) => {
-
-});
 
 app.use(express.static(__dirname +'/../../public'));
 
