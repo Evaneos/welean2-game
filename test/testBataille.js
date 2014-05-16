@@ -37,5 +37,24 @@ test('test Bataille', function() {
     bataille.winningCards(cards);
     
     bataille.run();
+    
+    
+    var aceHearts = new ClassicCard("Ace of Hearts", ClassicCard.values.ACE, ClassicCard.colors.HEARTS);
+    var jackHearts = new ClassicCard("Jack of Hearts", ClassicCard.values.JACK, ClassicCard.colors.HEARTS);
+    var fiveHearts = new ClassicCard("5 of Hearts", ClassicCard.values.FIVE, ClassicCard.colors.HEARTS);
+    var tenHearts = new ClassicCard("10 of Hearts", ClassicCard.values.TEN, ClassicCard.colors.HEARTS);
+    
+    var battleCards = [aceHearts, jackHearts, fiveHearts, tenHearts];
+    
+    var winning = bataille.winningCards(battleCards);
+    expect(1, winning.length);
+    expect(aceHearts, winning[0]);
+    
+    var aceClubs = new ClassicCard("Ace of Clubs", ClassicCard.values.ACE, ClassicCard.colors.CLUBS);
+    
+    var battleCards2 = [aceHearts, jackHearts, aceClubs, fiveHearts, tenHearts];
+   
+    var winning2 = bataille.winningCards(battleCards2);
+    expect(2, winning2.length);
 });
 
