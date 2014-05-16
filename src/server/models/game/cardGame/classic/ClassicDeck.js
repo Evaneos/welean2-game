@@ -9,7 +9,7 @@ ClassicDeck.extendPrototype({
 		if(number !== 52 || number !== 32) {
 			throw new Error("deck.impossible.54or32cards");
 		}
-		ClassicCard.superContruct.call(this, number);
+		ClassicCard.superConstruct.call(this, number);
     },
     build() {
     	var cards = [];

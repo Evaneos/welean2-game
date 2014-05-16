@@ -10,7 +10,7 @@ ClassicCard.defineProperty("values", {
 
 ClassicCard.extendPrototype({
 	construct(name, value, color) {
-		ClassicCard.superContruct.call(this, name);
+		ClassicCard.superConstruct.call(this, name);
 		this.value = value;
 		this.color = color;
     }

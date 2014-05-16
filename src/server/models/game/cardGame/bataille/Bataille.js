@@ -6,7 +6,7 @@ module.exports = Bataille;
 
 Bataille.extendPrototype({
 	construct(socket, token) {
-		Bataille.superContruct.call(this, socket, token, 2, 4);
+		Bataille.superConstruct.call(this, socket, token, 2, 4);
     },
     buildDeck() {
     	console.log("Building deck...");
