@@ -18,7 +18,7 @@ CardPlayer.extendPrototype({
     	if (!this.hasCardInHand(card)) {
     		throw new Error("player.card.notInHand");
     	}
-    	console.log("Removing card '"+card.name+"' from '"+this.name+"' hand")
+    	console.log("Removing card '"+card.name+"' from '"+this.name+"' hand");
     	S.array.remove(this.hand, card);
     }
 });
