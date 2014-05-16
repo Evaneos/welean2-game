@@ -83,7 +83,7 @@ Bataille.extendPrototype({
     },
     resolveTieRound(winners) {
         winners.forEach((winner)=>{
-            console.log(winner.name+"will play tie");
+            console.log(winner.name+" will play tie");
         });
         this.startRound(winners);
     },

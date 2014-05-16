@@ -1,4 +1,5 @@
 global.S = require('springbokjs-utils');
+require('springbokjs-shim/es6');
 
 var assert = require('proclaim');
 var expect = assert.strictEqual;
@@ -29,33 +30,12 @@ test('test Bataille', function() {
     player3.markAsReady();
     player4.markAsReady();
     
-    bataille.start();
-    
-    var i = 0;
-    var max = 50;
-    do {
+    bataille.on("roundStarted", function(){
         bataille.playCard(player1);
         bataille.playCard(player2);
         bataille.playCard(player3);
         bataille.playCard(player4);
-        bataille.endRound();
-        if(player1.hand.length > 0 && player2.hand.length > 0 && player3.hand.length > 0 && player4.hand.length > 0) {
-            if (!bataille.roundStarted) {
-                bataille.startRound();
-                i++;
-            }
-        } else {
-            break;
-        }
-    } while(i<max);
-    
-    console.log(player1.name+" has "+player1.hand.length+" cards in his hand");
-    console.log(player2.name+" has "+player2.hand.length+" cards in his hand");
-    console.log(player3.name+" has "+player3.hand.length+" cards in his hand");
-    console.log(player4.name+" has "+player4.hand.length+" cards in his hand");
-    
-    bataille.end();
-    console.log("======================================================");
-    console.log("======================================================");
+    });
+    bataille.start();
 });
 

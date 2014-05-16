@@ -25,6 +25,9 @@ CardPlayer.extendPrototype({
         S.array.remove(this.hand, card);
     },
     getFirstCard() {
+        if (this.hand.length === 0) {
+            throw new Error("player.hand.empty");
+        }
         return this.hand.pop();
     }
 });
