@@ -9,15 +9,9 @@ Room.extendPrototype({
         this.token = token;
         this.usersMax = usersMax;
         this.usersMin = usersMin;
-        if (usersMin = 0) {
-        	this.state = Room.states.MIN_USERS_REACHED;
-        } else {
-        	this.state = Room.states.WAITING_FOR_USERS;
-        }
-        
         this.users = {};
         this.usersCount = 0;
-        
+        this.checkUsers();
     },
     exists(user) {
     	return (this.users[user.name] !== undefined);
