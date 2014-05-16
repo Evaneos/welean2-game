@@ -24,7 +24,7 @@ CardGame.extendPrototype({
     deal(numberPerPlayer=0) {
     	var i = 0;
     	while((numberPerPlayer===0 || i<numberPerPlayer) && this.deck.remaining>0 ) {
-	    	this.room.users.forEach((player) => {
+	    	S.forEach(this.room.users, (player) => {
 	    		player.addCardToHand(this.deck.draw(i));
 	    	});
     		i++;
@@ -38,6 +38,7 @@ CardGame.extendPrototype({
     	console.log("I can't decide!");
     },
     play(player, cards) {
+    	console.log(player.name+" plays "+cards.length+" cards from his hand");
     	cards.forEach((card)=>{
     		player.removeCardFromHand(card);
     		this.currentCards.push(card);
