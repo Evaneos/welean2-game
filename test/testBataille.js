@@ -29,6 +29,7 @@ test('test Bataille', function() {
     expect(47, bataille.deck.cards.length);
     
     expect(5, cards.length);
+    player.active = true;
     bataille.play(player, cards);
     
     expect(5, bataille.currentCards.length);
@@ -36,7 +37,7 @@ test('test Bataille', function() {
     
     bataille.winningCards(cards);
     
-    bataille.run();
+    bataille.start();
     
     
     var aceHearts = new ClassicCard("Ace of Hearts", ClassicCard.values.ACE, ClassicCard.colors.HEARTS);

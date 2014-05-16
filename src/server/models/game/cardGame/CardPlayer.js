@@ -11,14 +11,20 @@ CardPlayer.extendPrototype({
     hasCardInHand(card){
         return (S.array.has(this.hand, card));
     },
-    addCardToHand(card) {
-        this.hand.push(card);
+    addCardToHand(card, under=false) {
+        if(under) {
+            this.hand.unshift(card);
+        } else {
+            this.hand.push(card);
+        }
     },
     removeCardFromHand(card) {
         if (!this.hasCardInHand(card)) {
             throw new Error("player.card.notInHand");
         }
-        console.log("Removing card '"+card.name+"' from '"+this.name+"' hand");
         S.array.remove(this.hand, card);
+    },
+    getFirstCard() {
+        return this.hand.pop();
     }
 });
