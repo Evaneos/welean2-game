@@ -25,4 +25,5 @@ app.get('*', (req, res) => res.render('index', { basepath: argv.basepath || '/',
 
 app.use(express.static(__dirname +'/../../public'));
 
-app.listen(3000, console.log.bind(null, 'Listening on port ' + port));
+var port = argv.port || 3000;
+app.listen(port, console.log.bind(null, 'Listening on port ' + port));
