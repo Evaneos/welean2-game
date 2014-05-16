@@ -11,11 +11,13 @@ User.extendPrototype({
         this.socket = socket;
         this.user = new CommonUser();
         // TODO parent / common Mainboard + User
-        socket.on('room:quit', (data) => {
-            if (data.client == 'device') {
-                this.application.removeUser(this);
-            }
-        });
+        socket.on('room:quit', this._onQuit.bind(this));
         application.addUser(this);
     },
+
+    _onQuit(data) {
+        if (data.client == 'device') {
+            this.application.removeUser(this);
+        }
+    }
 });
