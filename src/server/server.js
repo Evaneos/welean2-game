@@ -12,6 +12,10 @@ var argv = require('minimist')(process.argv.slice(2), {
 
 var app = express();
 var server = require('http').createServer(app);
+
+var applicationFactory = new require('./factories/ApplicationFactory');
+
+
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
@@ -20,7 +24,7 @@ app.use(bodyParser.urlencoded());
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket.js')(server);
+require('./socket')(server);
 
 if (!argv.production) {
     console.log('Dev mode');
@@ -46,7 +50,6 @@ app.get('/', (req, res) => {
 // Creation of the game (from the roomboard)
 app.post('/:gameKey/create', (req, res) => {
     var gameKey = req.params.gameKey;
-    console.log(gameKey);
 
     var token, i = 0;
     while (!token && token2app[token]) {
@@ -57,7 +60,10 @@ app.post('/:gameKey/create', (req, res) => {
     }
 
     // Create an Application with a Room, ready to receive sockets
-    var app = null;
+    var app = applicationFactory.get(gameKey, null, token);
+    if (!app) {
+        return res.json(500, { error: 'No game found for this key' });
+    }
 
     token2app[token] = app;
     res.json({ token: token });
