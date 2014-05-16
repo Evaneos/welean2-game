@@ -8,12 +8,7 @@ Bataille.defineProperty("gameKey", "bataille");
 
 Bataille.extendPrototype({
 	construct(socket, token) {
-<<<<<<< HEAD
 		Bataille.superConstruct.call(this, socket, token, 4, 2);
-=======
-		// Bataille.superConstruct.call(this, socket, token, 2, 4);
-		// this.shuffleDeck();
->>>>>>> 13fd1c39ebe2d7fb9d477648fa6d5691e99c8936
     },
     buildDeck() {
     	console.log("Building deck...");
