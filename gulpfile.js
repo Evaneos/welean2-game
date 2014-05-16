@@ -12,7 +12,10 @@ require('springbokjs-base/gulptask.js')(pkg, gulp, {
             'node_modules/springbokjs-shim/init.js',
             //'node_modules/ejs/ejs.min.js'
         ]
-    }
+    },
+    jshintBrowserOptions: {
+        "predef": [ "S" ]
+    },
 });
 
 
