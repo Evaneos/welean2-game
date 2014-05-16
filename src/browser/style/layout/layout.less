@@ -1,0 +1,47 @@
+html,body{ height:100%; }
+
+body{
+    font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+    margin:0;
+    padding:0;
+    /* @include webkitAntialiased; */
+    /* http://stackoverflow.com/questions/11589985/webkit-text-aliasing-gets-weird-during-css3-animations */
+    -webkit-backface-visibility: hidden;
+
+    background: #222;
+    color: #FFF;
+
+    margin: 0 auto;
+    width: 1000px;
+}
+
+input, textarea{
+    font: normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+}
+
+pre, code, kbd, samp{
+    font: normal 1.07em 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
+}
+
+body .container{
+    position: relative;
+    height: 100%;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+.col {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+.col.right {
+    left: auto;
+    right: 0
+}

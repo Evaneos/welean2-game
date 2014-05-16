@@ -14,13 +14,15 @@
         <script type="text/javascript" src="<%= basepath %>dist/welean2-game.templates.js"></script>
     </head>
     <body>
-        hello device <%= name %> :)
-        <script type="text/javascript">
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate([100,30,100,30,100,200,200,30,200,30,200,200,100,30,100,30,100]);
-            } else {
-                alert('vibration api is not available !!');
-            }
-        </script>
+        <div class="container">
+            hello device <%= name %> :)
+            <script type="text/javascript">
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate([100,30,100,30,100,200,200,30,200,30,200,200,100,30,100,30,100]);
+                } else {
+                    alert('vibration api is not available !!');
+                }
+            </script>
+        </div>
     </body>
 </html>

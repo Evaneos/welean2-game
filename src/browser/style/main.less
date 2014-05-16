@@ -1,1 +1,44 @@
 @import 'config/colors.less';
+@import 'layout/layout.less';
+
+h1 {
+    font-size: 40px;
+}
+
+.list-games {
+    list-style: none;
+    margin: 15px 50px;
+    padding: 0;
+
+
+    li {
+        float: left;
+        display: block;
+        width: 350px;
+        height: 220px;
+        margin: 0 20px 3px 2px;
+        background: #000 center no-repeat;
+        background-size: contain;
+        border-radius: 4px;
+        box-shadow: 0 0 5px -1px #000;
+
+        padding: 10px 25px;
+        text-align: center;
+        font-size: 30px;
+        text-shadow: 0 0 0.5em #000;
+
+        em {
+            font-size: 12px;
+        }
+
+        &.disable {
+            opacity: .3;
+            background: #777;
+        }
+    }
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
