@@ -1,6 +1,6 @@
 var Room = require('./Room');
 
-var Application = S.newClass();
+var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
 
 Application.extendPrototype({

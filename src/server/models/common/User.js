@@ -1,4 +1,4 @@
-var User = S.newClass();
+var User = S.extendClass(require("events").EventEmitter);
 module.exports = User;
 
 User.defineProperty("states", { IDLE : 1, READY : 2, AWAY : 3});
