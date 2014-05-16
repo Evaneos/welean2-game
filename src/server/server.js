@@ -7,6 +7,8 @@ var token2app = require('./token.js');
 global.S = require('springbokjs-utils');
 var generator = require('springbokjs-utils/generator');
 
+var User = require('./models/common/User.js');
+
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
         'production': 'prod'
@@ -33,9 +35,31 @@ app.locals.basepath = argv.basepath || '/';
 
 require('./socket')(server, function(io) {
     io.sockets.on('connection', function(socket) {
+        var user, game;
+
         socket.on('room:join', function(data) {
-            console.info("room:join", data.token);
-            // token2app[data.token].onJoin(socket);
+            if (game) {
+                throw new Error('room:join already called for this game');
+            }
+
+            game = token2app[data.token];
+
+            if (data.client == 'board') {
+                game.socket = socket;
+            } else if (data.client == 'device') {
+                if (user) {
+                    throw new Error('room:join already called for this user');
+                }
+
+                user = new User(socket, data.username);
+                game.join(user);
+            }
+        });
+
+        socket.on('room:quit', function(data) {
+            if (data.client == 'device') {
+                game.quit(user);
+            }
         });
     });
 });
