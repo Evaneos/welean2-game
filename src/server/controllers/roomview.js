@@ -6,5 +6,5 @@ module.exports = function(req, res) {
     var app = token2app[token];
     console.info("roomview", app);
 
-    res.render(app.gameKey + '/roomboard/index', { token : token });
+    res.render(app.self.gameKey + '/roomboard/index', { token : token });
 };
