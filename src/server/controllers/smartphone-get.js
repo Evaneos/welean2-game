@@ -5,9 +5,9 @@ module.exports = function(req, res) {
     var user = req.cookies && req.cookies.user;
     var app = token2app[token];
     if (!user) {
-        res.render(app.gameKey + '/device/auth', { });
+        res.render(app.self.gameKey + '/device/auth', { });
     }
     else {
-        res.render(app.gameKey + '/device/index', { name: user.name });
+        res.render(app.self.gameKey + '/device/index', { name: user.name, token: token });
     }
 };
