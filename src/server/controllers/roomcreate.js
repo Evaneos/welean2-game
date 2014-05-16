@@ -24,5 +24,6 @@ module.exports = function(req, res) {
     var app = new ApplicationFactory().get(gameKey, null, token);
 
     token2app[token] = app;
+
     res.render(gameKey + '/roomboard/index', { token : token });
 };

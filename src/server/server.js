@@ -35,6 +35,7 @@ require('./socket')(server, function(io) {
     io.sockets.on('connection', function(socket) {
         socket.on('room:join', function(data) {
             console.info("room:join", data.token);
+            // token2app[data.token].onJoin(socket);
         });
     });
 });
