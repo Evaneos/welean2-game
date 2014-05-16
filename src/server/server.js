@@ -39,7 +39,7 @@ var token2app = {};
 
 // Home page, for the roomboard
 app.get('/', (req, res) => {
-    res.render('index', { });
+    res.render('roomboard/index', { });
 });
 
 
@@ -64,8 +64,8 @@ app.post('/:gameKey/create', (req, res) => {
 });
 
 // From the smartphone
-app.get('/:token', (req, res) => {
-
+app.get('/play/:token', (req, res) => {
+    res.render('device/index', { });
 });
 
 app.use(express.static(__dirname +'/../../public'));
