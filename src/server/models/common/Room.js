@@ -2,6 +2,7 @@ var Room = S.newClass();
 module.exports = Room;
 
 Room.defineProperty("states", { WAITING_FOR_USERS : 1, MIN_USERS_REACHED : 2, ROOM_FULL : 3});
+Room.defineProperty("statesValues", Object.keys(Room.states).map((v) => Room.states[v]));
 
 Room.extendPrototype({
 	construct(token, usersMax, usersMin=0) {
@@ -33,28 +34,41 @@ Room.extendPrototype({
 		this.users[user.name] = user;
 		this.usersCount++;
 		
-		if (this.usersCount === this.usersMin) {
+		this.checkUsers();
+    },
+    removeUser(user) {
+    	if (!this.exists(user)) {
+    		throw new Error("user.notFound");
+    	}
+    	
+    	delete this.users[user.name];
+    	this.usersCount--;
+    	
+    	this.checkUsers();
+    },
+    checkUsers() {
+    	if (this.usersCount >= this.usersMin) {
 			this.changeToState(Room.states.MIN_USERS_REACHED);
 		} else if (this.usersCount === this.usersMax) {
 			this.changeToState(Room.states.ROOM_FULL);
+		} else {
+			this.changeToState(Room.states.WAITING_FOR_USERS);
 		}
     },
-    removeUser(user) {
-    	S.array.remove(this.users, user);
-    },
     changeToState(state) {
-    	if (S.array.has(Room.states, state)) {
-    		this.state = state;
+    	if (!S.array.has(Room.statesValues, state)) {
+    		throw new Error("room.state.notAvailable");
     	}
+    	this.state = state;
     },
     ready() {
     	if (this.state === Room.states.WAITING_FOR_USERS) {
     		return false;
     	}
     	
-    	this.users.forEach((element, index) => {
+    	return !S.some(this.users, (element) => {
     		if (!element.ready()) {
-    			return false;
+    			return true;
     		}
     	});
     }
