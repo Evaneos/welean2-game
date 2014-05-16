@@ -18,5 +18,8 @@ User.extendPrototype({
     },
     ready() {
         return (this.state === User.states.READY);
+    },
+    markAsReady() {
+        this.changeToState(User.states.READY);
     }
 });
