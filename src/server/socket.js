@@ -1,5 +1,5 @@
 var socketio = require('socket.io');
-module.exports = function(server) {
+module.exports = function(server, cb) {
     var io = socketio.listen(server);
 
     /* #if PROD */
@@ -20,10 +20,5 @@ module.exports = function(server) {
     io.set('heartbeat timeout',120);
     io.set('heartbeat interval',300);
 
-    io.sockets.on('connection', function(socket) {
-        socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
-            console.log(data);
-        });
-    });
+    cb(io);
 };

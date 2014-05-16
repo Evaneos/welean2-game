@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
+var token2app = require('./token.js');
 
 global.S = require('springbokjs-utils');
 var generator = require('springbokjs-utils/generator');
@@ -30,7 +31,14 @@ router.load(require('./config/route.js'));
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket')(server);
+require('./socket')(server, function(io) {
+    io.sockets.on('connection', function(socket) {
+        socket.on('room:join', function(data) {
+            console.info("room:join", data.token);
+            // token2app[data.token].onJoin(socket);
+        });
+    });
+});
 
 if (!argv.production) {
     console.log('Dev mode');

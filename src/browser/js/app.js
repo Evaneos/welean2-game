@@ -1,9 +1,15 @@
 document.addEventListener( "DOMContentLoaded", main, false );
 
 function main() {
-    var socket = io.connect('http://localhost');
-    socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', { message: 'bob' });
-    });
+    if (client && client == 'device' && token) {
+        var app = require('./device.js');
+        app.run(token);
+    }
+    else if (client && client == 'board' && token) {
+        var app = require('./board.js');
+        app.run(token);
+    }
+    else {
+        console.info("ahahah");
+    }
 }
