@@ -9,16 +9,20 @@ Application.extendPrototype({
         this.token = token;
         this.room = new Room(token, usersMax, usersMin);
         this.started  = false;
+        
+        this.on("started", (app) => {
+            app.started = true;
+            app.run();
+        });
     },
     start() {
         if (this.room.ready() && this.started === false) {
-            this.started = true;
             
             S.forEach(this.room.users, (player) => {
-                player.active = true;
+                player.activate();
             });
             
-            this.run();
+            this.emit("started", this);
         } else {
             console.log("Can't start!");
         }

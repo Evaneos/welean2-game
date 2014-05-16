@@ -51,6 +51,8 @@ test('test Bataille', function() {
     
     console.log(player1.name+" has "+player1.hand.length+" cards in his hand");
     console.log(player2.name+" has "+player2.hand.length+" cards in his hand");
+    console.log(player3.name+" has "+player3.hand.length+" cards in his hand");
+    console.log(player4.name+" has "+player4.hand.length+" cards in his hand");
     
     bataille.end();
     console.log("======================================================");

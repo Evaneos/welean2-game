@@ -37,7 +37,7 @@ test('test CardGame', function() {
     player.active = true;
     assert.throws(function() {
     	cardGame.play(player, cards);
-    }, "player.deactivated.play");
+    }, "player.card.notInHand");
     
     player.addCardToHand(card1);
     player.addCardToHand(card2);

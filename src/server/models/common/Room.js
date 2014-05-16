@@ -12,6 +12,16 @@ Room.extendPrototype({
         this.users = {};
         this.usersCount = 0;
         this.checkUsers();
+        
+        this.on('userAdded', (user) => {
+            this.usersCount++;
+            this.checkUsers();
+        });
+        
+        this.on('userRemoved', (user) => {
+            this.usersCount--;
+            this.checkUsers();
+        });
     },
     exists(user) {
         return (this.users[user.name] !== undefined);
@@ -26,9 +36,8 @@ Room.extendPrototype({
         }
         
         this.users[user.name] = user;
-        this.usersCount++;
+        this.emit('userAdded', user);
         
-        this.checkUsers();
     },
     removeUser(user) {
         if (!this.exists(user)) {
@@ -36,9 +45,7 @@ Room.extendPrototype({
         }
         
         delete this.users[user.name];
-        this.usersCount--;
-        
-        this.checkUsers();
+        this.emit('userRemoved', user);
     },
     checkUsers() {
         if (this.usersCount >= this.usersMin) {
@@ -54,6 +61,7 @@ Room.extendPrototype({
             throw new Error("room.state.notAvailable");
         }
         this.state = state;
+        this.emit("roomStatusChanged", this, state);
     },
     ready() {
         if (this.state === Room.states.WAITING_FOR_USERS) {

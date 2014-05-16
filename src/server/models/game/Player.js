@@ -7,5 +7,13 @@ Player.extendPrototype({
     construct(socket, name) {
         Player.superConstruct.call(this, socket, name);
         this.active = false;
+    },
+    activate() {
+        this.active = true;
+        this.emit("activated", this);
+    },
+    deactivate() {
+        this.active = false;
+        this.emit("deactivated", this);
     }
 });

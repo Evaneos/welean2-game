@@ -14,7 +14,8 @@ Bataille.extendPrototype({
     },
     buildDeck() {
         console.log("Building deck...");
-        return new ClassicDeck(52);
+        this.deck = new ClassicDeck(52);
+        this.emit("deckBuilt", this.deck);
     },
     run() {
         console.log("Let's Play Bataille !");
