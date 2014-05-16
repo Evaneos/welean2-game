@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 require('springbokjs-shim/es6');
-=======
 global.S = require('springbokjs-utils');
->>>>>>> 85665f674b18acf6abbb1dc28044c0e1405e4b01
 
 var express = require('express');
 var bodyParser = require('body-parser');
