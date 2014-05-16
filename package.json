@@ -10,6 +10,7 @@
     "minimist": "^0.1.0",
     "socket.io": "^0.9.16",
     "springbokjs-base": "^0.4.12",
-    "springbokjs-shim": "^0.1.15"
+    "springbokjs-shim": "^0.1.15",
+    "springbokjs-utils": "^0.3.9"
   }
 }
