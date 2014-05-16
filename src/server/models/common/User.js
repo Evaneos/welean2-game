@@ -1,4 +1,4 @@
-var User = S.newClass();
+var User = S.extendClass(require("events").EventEmitter);
 module.exports = User;
 
 User.defineProperty("states", { IDLE : 1, READY : 2, AWAY : 3});
@@ -18,5 +18,8 @@ User.extendPrototype({
     },
     ready() {
         return (this.state === User.states.READY);
+    },
+    markAsReady() {
+        this.changeToState(User.states.READY);
     }
 });

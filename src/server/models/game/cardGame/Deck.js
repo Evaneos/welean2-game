@@ -11,8 +11,12 @@ Deck.extendPrototype({
         return [];
     },
     shuffle() {
-        console.info("list of cards", this.cards);
         this.cards.sort((a,b) => Math.round( Math.random() * 2 ) - 1);
+        console.info(
+            "------------------list of cards------------------",
+            this.cards,
+            "----------------------------------"
+        );
     },
     draw(number=1) {
         if (this.remaining === 0) {

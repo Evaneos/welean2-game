@@ -1,4 +1,4 @@
-var Room = S.newClass();
+var Room = S.extendClass(require("events").EventEmitter);
 module.exports = Room;
 
 Room.defineProperty("states", { WAITING_FOR_USERS : 1, MIN_USERS_REACHED : 2, ROOM_FULL : 3});

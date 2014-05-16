@@ -18,7 +18,8 @@ Bataille.extendPrototype({
     },
     run() {
         console.log("Let's Play Bataille !");
-        this.shuffle();
+        this.shuffleDeck();
+        this.deal();
         this.startRound();
     },
     cardPlayed(card) {
@@ -74,5 +75,25 @@ Bataille.extendPrototype({
                 return (S.array.has(beats[other.value], reference.value))?1:-1;
             }
         }
+    },
+    resolveRoundWinner() {
+        var cards = this.winningCards(this.currentCards);
+        return this.resolveCardsPlayers(cards);
+    },
+    resolveTieRound(winners) {
+        winners.forEach((winner)=>{
+            console.log(winner.name+"will play tie");
+        });
+        this.startRound(winners);
+    },
+    resolveNoWinnerRound() {
+        throw new Error("bataille.impossible");
+    },
+    awardWinner(winner) {
+        console.log("----- "+winner.name+" wins -----\n",this.toWin,"\n------------------------");
+        this.toWin.forEach((card)=>{
+            winner.addCardToHand(card, true);
+        });
+        this.toWin = [];
     }
 });

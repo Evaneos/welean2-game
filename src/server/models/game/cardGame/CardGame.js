@@ -11,6 +11,8 @@ CardGame.extendPrototype({
         this.currentCards = [];
         this.playersForRound = [];
         this.roundNumber = 0;
+        this.roundStarted = false;
+        this.cardsPlayers = {};
     },
     run() {
         console.log("Let's Play !");
@@ -31,6 +33,11 @@ CardGame.extendPrototype({
             });
             i++;
         }
+        S.forEach(this.room.users, (player) => {
+            console.log("----------"+player.name+"'s hand-----");
+            console.log(player.hand);
+            console.log("-----------------------------");
+        });
     },
     drawCard(player, number=1) {
         console.log("Drawing "+number+" cards...");
@@ -42,32 +49,59 @@ CardGame.extendPrototype({
     play(player, cards) {
         console.log(player.name+" plays "+cards.length+" cards from his hand");
         cards.forEach((card)=>{
-            player.removeCardFromHand(card);
-            this.cardPlayed(card);
+            this.playCard(player, card);
         });
+    },
+    playCard(player, card = null) {
+        if (!player.active || player.hand.length === 0) {
+            throw new Error("player.deactivated.play");
+        }
+        if(card === null) {
+            card = player.getFirstCard();
+        } else {
+            player.removeCardFromHand(card);
+        }
+        this.cardsPlayers[card.name] = player;
+        this.cardPlayed(card);
     },
     cardPlayed(card) {
         this.currentCards.push(card);
     },
     startRound(players=[]) {
         
-        this.round++;
-        this.playersForRound = [];
-        
-        if (players.length <= 0) {
-            console.log("All users play round "+this.round);
-            S.forEach(this.room.users, (player) => {
-                players.push(player);
-            });
+        if (this.roundStarted) {
+            console.log("Round already started !");
+            return;
         }
         
-        players.forEach((player)=>{
-            this.playersForRound.push(player);
-        });
+        this.roundStarted = true;
+        
+        this.roundNumber++;
+        this.playersForRound = [];
+        this.currentCards = [];
+        
+        if (players.length <= 0) {
+            console.log("All users play round "+this.roundNumber);
+            S.forEach(this.room.users, (player) => {
+                if (player.active && player.hand.length > 0) {
+                    console.log(player.name+" has "+player.hand.length+" cards in his hand");
+                    this.playersForRound.push(player);
+                } else {
+                    console.log(player.name+"(deactivated) has "+player.hand.length+" cards in his hand");
+                }
+            });
+        } else {
+            players.forEach((player)=>{
+                console.log(player.name+" has "+player.hand.length+" cards in his hand");
+                this.playersForRound.push(player);
+            });
+        }
     },
     endRound() {
         var winners = this.resolveRoundWinner();
         var numberWinners = winners.length;
+        
+        this.roundStarted = false;
         
         if(numberWinners === 0) {
             this.resolveNoWinnerRound();
@@ -76,8 +110,15 @@ CardGame.extendPrototype({
         } else {
             this.awardWinner(winners[0]);
         }
+    },
+    resolveCardsPlayers(cards) {
+        var players = [];
         
-        this.playersForRound = [];
+        cards.forEach((card)=>{
+            players.push(this.cardsPlayers[card.name]);
+        });
+        
+        return players;
     },
     resolveRoundWinner() {
         console.log("I can't know that!");
