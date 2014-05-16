@@ -40,7 +40,6 @@ CardGame.extendPrototype({
     play(player, cards) {
     	console.log(player.name+" plays "+cards.length+" cards from his hand");
     	cards.forEach((card)=>{
-    		console.log(card.name);
     		player.removeCardFromHand(card);
     		this.currentCards.push(card);
     	});

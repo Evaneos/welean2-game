@@ -24,7 +24,7 @@ test('test Bataille', function() {
     bataille.shuffleDeck();
     bataille.deal(5);
     
-    cards = player.hand;
+    cards = player.hand.slice();
     expect(5, player.hand.length);
     expect(47, bataille.deck.cards.length);
     
