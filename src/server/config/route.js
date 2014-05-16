@@ -14,6 +14,11 @@ module.exports = {
             controller : 'roomcreate'
         },
         {
+            url     :  '/board/:token',
+            method  : 'get',
+            controller : 'roomview'
+        },
+        {
             url     :  '/play/:token',
             method  : 'get',
             controller : 'smartphone-get'
