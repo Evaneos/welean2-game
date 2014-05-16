@@ -6,14 +6,14 @@ module.exports = ApplicationFactory;
 ApplicationFactory.defineProperty("applications", { BATAILLE : "bataille"});
 
 ApplicationFactory.extendPrototype({
-	construct() {
+    construct() {
     },
     get(key, socket, token) {
-    	switch(key) {
-    		case ApplicationFactory.applications.BATAILLE :
-    			return new Bataille(socket, token);
-    		default :
-    			throw new Error("application.unknown");
-    	}
+        switch(key) {
+            case ApplicationFactory.applications.BATAILLE :
+                return { gameKey : 'bataille' }
+            default :
+                throw new Error("application.unknown");
+        }
     }
 });

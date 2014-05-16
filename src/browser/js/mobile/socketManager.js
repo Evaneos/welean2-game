@@ -1,11 +1,11 @@
 var mobileEventManager = {
   socket: null,
 
-  connect: function(url) {
+  connect(url) {
     this.socket = io.connect(url);
   },
 
-  emit: function(eventName, data) {
+  emit(eventName, data) {
     this.socket.emit(eventName, data);
   }
 };

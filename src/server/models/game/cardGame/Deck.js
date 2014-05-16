@@ -11,6 +11,7 @@ Deck.extendPrototype({
     	return [];
     },
     shuffle() {
+        console.info("list of cards", this.cards);
     	this.cards.sort((a,b) => Math.round( Math.random() * 2 ) - 1);
     },
     draw(number=1) {
