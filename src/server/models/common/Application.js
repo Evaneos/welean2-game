@@ -13,6 +13,7 @@ Application.extendPrototype({
     },
     start() {
         if (this.canBeStarted()) {
+            console.log('can start');
             S.forEach(this.room.users, (player) => {
                 player.activate();
             });
@@ -35,6 +36,7 @@ Application.extendPrototype({
     },
     end() {
         this.started  = false;
+        this.emit('ended');
     },
     join(user) {
         var userObj = null;
