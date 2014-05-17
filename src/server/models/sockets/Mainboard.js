@@ -40,8 +40,10 @@ Mainboard.extendPrototype({
         this.emit('ready', name);
     },
     _onDisconnect() {
-        this.application.removeMainboard(this);
-        this.application.removeListener('player:ready', this._bindedOnPlayerReady);
+        if (this.application && this._bindedOnPlayerReady) {
+            this.application.removeMainboard(this);
+            this.application.removeListener('player:ready', this._bindedOnPlayerReady);
+        }
 
         this.removeAllListeners();
     },
