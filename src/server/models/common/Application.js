@@ -9,23 +9,25 @@ Application.extendPrototype({
         this.token = token;
         this.room = new Room(token, usersMax, usersMin);
         this.started  = false;
-        
-        this.on("started", (app) => {
-            app.started = true;
-            app.run();
-        });
     },
     start() {
-        if (this.room.ready() && this.started === false) {
-            
+        if (this.canBeStarted()) {
             S.forEach(this.room.users, (player) => {
                 player.activate();
             });
             
-            this.emit("started", this);
+            this.started = true;
+            this.run();
+            this.emit('started');
         } else {
             console.log("Can't start!");
         }
+    },
+    tryToStart() {
+        this.start();
+    },
+    canBeStarted() {
+        return this.room.ready() && this.started === false;
     },
     run() {
         console.log("I am an abstract application, don't run me, moron!");
@@ -38,5 +40,8 @@ Application.extendPrototype({
     },
     quit(user) {
         this.room.removeUser(user);
+    },
+    delete() {
+        
     }
 });

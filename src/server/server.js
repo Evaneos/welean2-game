@@ -45,10 +45,14 @@ require('./socket')(server, function(io) {
             }
             //TODO factory in SocketApplication
 
-            if (data.client == 'board') {
-                new SocketMainboard(game, socket, data);
-            } else if (data.client == 'device') {
-                new SocketUser(game, socket, data);
+            try {
+                if (data.client == 'board') {
+                    new SocketMainboard(game, socket, data);
+                } else if (data.client == 'device') {
+                    new SocketUser(game, socket, data);
+                }
+            } catch(e) {
+                console.error(e.stack || e.message);
             }
         });
     });

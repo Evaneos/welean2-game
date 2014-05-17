@@ -1,4 +1,4 @@
-var token2app = require('../token.js');
+//var token2app = require('../token.js');
 
 module.exports = function(req, res) {
     var name = req.param('name');

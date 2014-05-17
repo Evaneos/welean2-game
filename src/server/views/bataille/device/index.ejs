@@ -23,6 +23,8 @@
                     alert('vibration api is not available !!');
                 }
             </script>
+
+            <button onclick="$(this).insertAfter($('<span>Vous êtes prêt</span>')).remove(); socket.emit('ready');">Je suis prêt !</button>
         </div>
     </body>
 

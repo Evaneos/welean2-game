@@ -1,13 +1,14 @@
+global.S = require('springbokjs-utils');
 document.addEventListener( "DOMContentLoaded", main, false );
 
 function main() {
-    if (client && client == 'device' && token) {
+    if (window.client && window.client == 'device' && window.token) {
         var app = require('./device.js');
-        app.run(token);
+        app.run(window.token, window.client, window.name);
     }
-    else if (client && client == 'board' && token) {
+    else if (window.client && window.client == 'board' && window.token) {
         var app = require('./board.js');
-        app.run(token);
+        app.run(window.token, window.client);
     }
     else {
         console.info("ahahah");

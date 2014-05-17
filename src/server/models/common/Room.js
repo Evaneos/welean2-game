@@ -12,16 +12,6 @@ Room.extendPrototype({
         this.users = {};
         this.usersCount = 0;
         this.checkUsers();
-        
-        this.on('userAdded', (user) => {
-            this.usersCount++;
-            this.checkUsers();
-        });
-        
-        this.on('userRemoved', (user) => {
-            this.usersCount--;
-            this.checkUsers();
-        });
     },
     exists(user) {
         return (this.users[user.name] !== undefined);
@@ -30,21 +20,25 @@ Room.extendPrototype({
         if (this.usersCount >=  this.usersMax) {
             throw new Error("user.max.reached");
         }
-        
+
         if (this.exists(user)) {
             throw new Error("user.name.alreadyExists");
         }
-        
+
         this.users[user.name] = user;
         this.emit('userAdded', user);
-        
+        this.usersCount++;
+        this.checkUsers();
+
     },
     removeUser(user) {
         if (!this.exists(user)) {
             throw new Error("user.notFound");
         }
-        
+
         delete this.users[user.name];
+        this.usersCount--;
+        this.checkUsers();
         this.emit('userRemoved', user);
     },
     checkUsers() {
@@ -67,7 +61,7 @@ Room.extendPrototype({
         if (this.state === Room.states.WAITING_FOR_USERS) {
             return false;
         }
-        
+
         return !S.some(this.users, (element) => {
             if (!element.ready()) {
                 return true;
