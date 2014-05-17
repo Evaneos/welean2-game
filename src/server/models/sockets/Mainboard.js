@@ -11,7 +11,7 @@ Mainboard.extendPrototype({
 
 
         // Application events
-        application.on('board:ready', this._bindedOnPlayerReady = this._onPlayerReady.bind(this));
+        socket.on('board:ready', this._bindedOnMainboardReady = this._onMainboardReady.bind(this));
 
         this.socket.emit('initialData', application.initialData());
         application.addMainboard(this);
@@ -34,7 +34,8 @@ Mainboard.extendPrototype({
         return this.ready = false;
     },
 
-    _onPlayerReady(name) {
+    _onMainboardReady(name) {
+        console.log('_onMainboardReady');
         this.ready = true;
         this.emit('ready', name);
     },
@@ -43,6 +44,5 @@ Mainboard.extendPrototype({
         this.application.removeListener('player:ready', this._bindedOnPlayerReady);
 
         this.removeAllListeners();
-        this.user.removeAllListeners();
     },
 });

@@ -4,7 +4,7 @@ document.addEventListener( "DOMContentLoaded", main, false );
 function main() {
     var token = window.token, client = window.client, name = window.name;
     console.log('DEVICE');
-    var socket = io.connect('/');
+    var socket = io.connect('http://localhost');
     global.socket = socket;
     socket.emit('room:join', { token : token, client: client, name: name });
 

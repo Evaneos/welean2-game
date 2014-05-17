@@ -42,13 +42,14 @@ Application.extendPrototype({
                 });
                 this._emitToUser(this.usersMap[winner.name], 'round:won');
                 this.emitToMainBoards('round:winner', { userName: winner.name });
-            });
+            },1);
         });
 
         app.on('roundStarted', (roundNumber, players) => {
             var names = players.map((u) => u.name);
             this.mainboards.forEach((mainboard) => {
                 mainboard.once('ready', () => {
+                    console.log('ready');
                     if (this.areMainboardsReady()) {
                         this.emitToUsersFiltredByNames(names, 'round:started');
                     }
