@@ -12,7 +12,6 @@ User.extendPrototype({
         // TODO parent / common Mainboard + User
         socket.on('disconnect', this._onDisconnect.bind(this));
         socket.on('ready', this._onReady.bind(this));
-        
     },
 
     _onDisconnect() {
