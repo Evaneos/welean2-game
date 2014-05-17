@@ -22,6 +22,15 @@ Application.extendPrototype({
         this.app = app;
         this.mainboards = [];
         this.users = [];
+
+        app.on('started', () => {
+            console.log('STARTED!!!!!!!!!!');
+            this.emitToAll('application:started');
+        });
+        app.on('ended', () => {
+            console.log('ENDED!!!!!!!!!!');
+            this.emitToAll('application:ended');
+        });
     },
 
     emitToMainBoards(event, data) {
@@ -54,17 +63,18 @@ Application.extendPrototype({
         S.array.remove(this.mainboards, socket);
         //this.app.pause();
     },
-    addUser(user) {
+    createUser(socketUser, name) {
         console.log('add user');
-        this.users.push(user);
-        this.app.join(user);
-        this.emitToMainBoards('player:connected', user.name);
-        this.emitToUsers('player:connected', user.name);
+        this.users.push(socketUser);
+        var user = this.app.join(name);
+        this.emitToMainBoards('player:connected', name);
+        this.emitToUsers('player:connected', name);
+        return user;
     },
     removeUser(user) {
         console.log('remove user');
         S.array.remove(this.users, user);
-        this.app.quit(user);
+        this.app.quit(user) ;
         this.emitToMainBoards('player:disconnected', user.name);
         this.emitToUsers('player:disconnected', user.name);
         if (this.mainboards.length === 0 && this.users.length === 0) {
@@ -73,9 +83,13 @@ Application.extendPrototype({
     },
     userEvent(user, event, data) {
         if (event === 'ready') {
+            console.log(this.users.some((u) => {
+                console.log(u);
+                console.log(u.name, u.isReady(), u.user.state);
+                return !u.isReady();
+            }));
             if (!this.users.some((u) => !u.isReady())) {
-                this.app.start();
-                this.emitToAll('application:started');
+                this.app.tryToStart();
             }
         }
         console.log('userEvent', user.name, event, data);

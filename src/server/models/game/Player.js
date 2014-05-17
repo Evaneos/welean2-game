@@ -10,10 +10,10 @@ Player.extendPrototype({
     },
     activate() {
         this.active = true;
-        this.emit("activated", this);
+        this.emit("activated");
     },
     deactivate() {
         this.active = false;
-        this.emit("deactivated", this);
+        this.emit("deactivated");
     }
 });
