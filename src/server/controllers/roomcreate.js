@@ -13,13 +13,12 @@ module.exports = function(req, res) {
 
     var token, i = 0;
 
-    /*while (!token || (token && token2app[token])) {
+    while (!token || (token && token2app[token])) {
         token = generator.randomCode(7);
         if (i++ > 20) {
             return res.json(500, { error: 'Failed to generate token' });
         }
-    }*/
-    token = 1;
+    }
 
     // Create an Application with a Room, ready to receive sockets
     var app = new ApplicationFactory().get(gameKey, req.query);
