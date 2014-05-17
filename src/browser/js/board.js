@@ -103,6 +103,14 @@ function main() {
     socket.on('player:roundWinner', function(data) {
         log('Le joueur "' + data.userName + '" a gagné ce tour !');
     });
+
+    socket.on('round:winner', function(data) {
+        log('Winner: ' + data.userName);
+    });
+    socket.on('round:started', function(data) {
+        log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));
+    });
+
     }catch(err) {
         console.error(err);
     }
