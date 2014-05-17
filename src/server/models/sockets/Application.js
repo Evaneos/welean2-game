@@ -30,6 +30,9 @@ Application.extendPrototype({
             });
         });
         app.on('ended', () => {
+            this.users.forEach((user) => {
+                user.markAsIdle();
+            });
             process.nextTick(() => {
                 this.emitToAll('application:ended');
             });
@@ -68,7 +71,8 @@ Application.extendPrototype({
         this._emitToUsers(this.users.filter((u) => u.name !== user.name), event, data);
     },
     emitToUsersFiltredByNames(names, event, data) {
-        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data);
+        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data
+            );
     },
     _emitToUsers(users, event, data) {
         logger.debug('_emitToUsers (' + users.length + ')' + event + ' ' + require('util').inspect(data));
@@ -127,6 +131,10 @@ Application.extendPrototype({
         this.emitToUsers('player:disconnected', user.name);
         if (this.mainboards.length === 0 && this.users.length === 0) {
             this.delete();
+        } else {
+            if (this.app.started) {
+                this.app.end();
+            }
         }
     },
     userEvent(user, event, data) {

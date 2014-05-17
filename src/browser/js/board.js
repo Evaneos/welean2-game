@@ -41,9 +41,15 @@ function main() {
                 $('.playersReadyCount').text(usersReady);
             }
         },
+        reset() {
+            this.ready = false;
+            if (this.$ready) {
+                this.$ready.remove();
+            }
+        },
         markAsReady() {
             this.ready = true;
-            $('<span> ✔</span>').appendTo(this.$elt).fadeIn().fadeOut().fadeIn();
+            this.$ready = $('<span> ✔</span>').appendTo(this.$elt).fadeIn().fadeOut().fadeIn();
             usersReady++;
             $('.playersReadyCount').text(usersReady);
             /*The server should be the one to starts the game
@@ -79,10 +85,14 @@ function main() {
         $('.playersReadyCount').text(usersReady);
         gameScreen.hide();
         welcomeScreen.show();
+        S.forEach(users, (u) => u.reset());
     });
 
     socket.on('player:connected', function(name) {
         log('Le joueur "' + name + '" nous a rejoint');
+        if (users[name]) {
+            users[name].delete();
+        }
         users[name] = new User(name);
     });
     socket.on('player:disconnected', function(name) {

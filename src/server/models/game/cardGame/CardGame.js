@@ -8,6 +8,21 @@ module.exports = CardGame;
 CardGame.extendPrototype({
     construct(token, usersMax, usersMin, maxRounds=50) {
         CardGame.superConstruct.apply(this, arguments);
+
+        this.maxRounds = maxRounds;
+        this.reset();
+
+        this.room.on("userAdded", (player) => {
+            player.on("played", (card) => {
+                this.played.add(player);
+                if (this.played.size == this.playersForRound.length) {
+                    this.emit("allPlayersPlayed");
+                    this.endRound();
+                }
+            });
+        });
+    },
+    reset() {
         this.buildDeck();
         this.currentCards = [];
         this.playersForRound = [];
@@ -15,24 +30,15 @@ CardGame.extendPrototype({
         this.roundNumber = 0;
         this.roundStarted = false;
         this.cardsPlayers = {};
-        
-        this.maxRounds = maxRounds;
-        
-        this.on("allPlayersPlayed", () => {
-            this.endRound();
-        });
-        
-        this.room.on("userAdded", (player) => {
-            player.on("played", (card) => {
-                this.played.add(player);
-                if (this.played.size == this.playersForRound.length) {
-                    this.emit("allPlayersPlayed");
-                }
-            });
-        });
     },
     run() {
         console.log("Let's Play !");
+    },
+    end() {
+        CardGame.super_.end.call(this);
+        this.clean();
+        this.declareGameWinner();
+        this.reset();
     },
     buildDeck() {
         this.deck = new Deck();
@@ -43,7 +49,7 @@ CardGame.extendPrototype({
     },
     deal(numberPerPlayer=0) {
         var i = 0;
-        while((numberPerPlayer===0 || i<numberPerPlayer) && this.deck.remaining>0 ) {
+        while ((numberPerPlayer===0 || i<numberPerPlayer) && this.deck.remaining>0 ) {
             S.forEach(this.room.users, (player) => {
                 player.addCardToHand(this.deck.draw(i));
             });
@@ -192,12 +198,6 @@ CardGame.extendPrototype({
         }
         this.room.addUser(userObj);
         return userObj;
-    },
-    end() {
-        this.clean();
-        this.declareGameWinner();
-        this.started  = false;
-        this.emit('ended');
     },
     declareGameWinner() {
         console.log("I don't know!");
