@@ -82,19 +82,26 @@ Bataille.extendPrototype({
         return this.resolveCardsPlayers(cards);
     },
     resolveTieRound(winners) {
-        winners.forEach((winner)=>{
-            console.log(winner.name+" will play tie");
-        });
+        this.emit("bataille", winners);
         this.startRound(winners);
     },
     resolveNoWinnerRound() {
         throw new Error("bataille.impossible");
     },
     awardWinner(winner) {
-        console.log("----- "+winner.name+" wins -----\n",this.toWin,"\n------------------------");
         this.toWin.forEach((card)=>{
             winner.addCardToHand(card, true);
         });
+        this.emit("roundWinner", winner, this.toWin);
         this.toWin = [];
+    },
+    declareGameWinner() {
+        var winner = null;
+        S.forEach(this.room.users, (player) => {
+            if(winner === null || player.hand.length > winner.hand.length) {
+                winner = player;
+            }
+        });
+        this.emit("gameWinner", winner);
     }
 });

@@ -19,8 +19,8 @@ Application.extendPrototype({
             });
             
             this.started = true;
-            this.run();
             this.emit('started');
+            this.run();
         } else {
             console.log("Can't start!");
         }
