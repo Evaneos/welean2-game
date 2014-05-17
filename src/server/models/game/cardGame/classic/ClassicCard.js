@@ -48,5 +48,6 @@ ClassicCard.extendPrototype({
         ClassicCard.superConstruct.call(this, name);
         this.value = value;
         this.color = color;
+        this.id = ClassicCard.generateId(color, value);
     }
 });
