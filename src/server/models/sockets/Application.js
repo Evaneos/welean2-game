@@ -26,7 +26,6 @@ Application.extendPrototype({
 
         app.on('started', () => {
             setTimeout(() => {
-                logger.log('STARTED!!!!!!!!!!');
                 this.emitToAll('application:started');
             });
         });
@@ -37,16 +36,23 @@ Application.extendPrototype({
         });
         app.on('roundWinner', (winner) => {
             setTimeout(() => {
-                this.emitToUsersExcept(winner, 'roundLost', (u) => {
+                this.emitToUsersExcept(winner, 'round:lost', (u) => {
                     return { hand: u.user.hand.length };
                 });
-                this._emitToUser(this.usersMap[winner.name], 'roundWon');
-                this.emitToMainBoards('player:roundWinner', { userName: winner.name });
+                this._emitToUser(this.usersMap[winner.name], 'round:won');
+                this.emitToMainBoards('round:winner', { userName: winner.name });
+            });
+        });
+
+        app.on('roundStarted', (roundNumber, players) => {
+            var names = players.map((u) => u.name);
+            setTimeout(() => {
+                this.emitToMainBoards('round:started', { roundNumber: roundNumber, playersNames: names });
+                this.emitToUsersFiltredByNames(names, 'round:started');
             });
         });
         app.on('gameWinner', (winners) => {
             setTimeout(() => {
-                //this.emitToAll()
             });
         });
     },
@@ -60,6 +66,9 @@ Application.extendPrototype({
     },
     emitToUsersExcept(user, event, data) {
         this._emitToUsers(this.users.filter((u) => u.name !== user.name));
+    },
+    emitToUsersFiltredByNames(names, event, data) {
+        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)));
     },
     _emitToUsers(users, event, data) {
         logger.debug('_emitToUsers (' + users.length + ')' + event + ' ' + require('util').inspect(data));

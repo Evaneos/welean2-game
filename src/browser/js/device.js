@@ -67,10 +67,13 @@ function main() {
         log('cardPlayed' + data.cardId);
     });
 
-    socket.on('roundLost', function() {
+    socket.on('round:lost', function() {
         log('You lost the round :( Maybe the next one :)');
     });
-    socket.on('roundWon', function() {
+    socket.on('round:won', function() {
         log('You won the round !!!');
+    });
+    socket.on('round:started', function() {
+        myTurn = true;
     });
 }
