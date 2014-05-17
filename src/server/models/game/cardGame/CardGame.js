@@ -1,5 +1,6 @@
 var Application = require('../../common/Application');
 var Deck = require('./Deck');
+var CardPlayer = require('./CardPlayer');
 
 var CardGame = Application.extend();
 module.exports = CardGame;
@@ -171,5 +172,17 @@ CardGame.extendPrototype({
             this.playersForRound.push(player);
             this.emit("playerAddedToRound", player);
         }
+    },
+    join(user) {
+        var userObj = null;
+        if (user instanceof CardPlayer) {
+            userObj = user;
+        } else if (S.isString(user)) {
+            userObj = new CardPlayer(null, user)
+            
+        } else {
+            throw new Error("cardGame.player.badType");
+        }
+        this.room.addUser(userObj);
     }
 });

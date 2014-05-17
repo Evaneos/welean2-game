@@ -1,4 +1,5 @@
 var Room = require('./Room');
+var User = require('./User');
 
 var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
@@ -36,7 +37,16 @@ Application.extendPrototype({
         this.started  = false;
     },
     join(user) {
-        this.room.addUser(user);
+        var userObj = null;
+        if (user instanceof User) {
+            userObj = user;
+        } else if (S.isString(user)) {
+            userObj = new User(null, user)
+            
+        } else {
+            throw new Error("application.user.badType");
+        }
+        this.room.addUser(userObj);
     },
     quit(user) {
         this.room.removeUser(user);
