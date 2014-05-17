@@ -19,8 +19,8 @@ Application.extendPrototype({
             });
             
             this.started = true;
-            this.run();
             this.emit('started');
+            this.run();
         } else {
             console.log("Can't start!");
         }
@@ -49,6 +49,7 @@ Application.extendPrototype({
             throw new Error("application.user.badType");
         }
         this.room.addUser(userObj);
+        return userObj;
     },
     quit(user) {
         this.room.removeUser(user);

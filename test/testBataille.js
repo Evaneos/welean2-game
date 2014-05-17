@@ -33,9 +33,6 @@ test('test Bataille', function() {
     player.active = true;
     bataille.play(player, cards);
     
-    expect(5, bataille.currentCards.length);
-    expect(0, player.hand.length);
-    
     bataille.winningCards(cards);
     
     bataille.start();

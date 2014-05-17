@@ -18,37 +18,6 @@ CardGame.extendPrototype({
         
         this.maxRounds = 50;
         
-        this.on("roundStarted", () => {
-            this.roundStarted = true;
-            if (this.playersForRound.length === 0) {
-                throw new Error("round.noPlayers");
-            }
-        });
-        
-        this.on("roundEnded", (winners) => {
-            S.forEach(this.room.users, (player) => {
-                console.log(player.name+" has "+player.hand.length+" cards in hand");
-                if(player.hand.length === 0) {
-                    player.deactivate();
-                }
-            });
-            
-            this.roundStarted = false;
-            
-            var numberWinners = winners.length;
-            if(numberWinners === 0) {
-                this.resolveNoWinnerRound();
-            } else if(numberWinners > 1) {
-                this.resolveTieRound(winners);
-            } else {
-                this.awardWinner(winners[0]);
-            }
-            
-            if(this.roundNumber < this.maxRounds) {
-                this.startRound();
-            }
-        });
-        
         this.on("allPlayersPlayed", () => {
             this.endRound();
         });
@@ -92,13 +61,12 @@ CardGame.extendPrototype({
         console.log("I can't decide!");
     },
     play(player, cards) {
-        console.log(player.name+" plays "+cards.length+" cards from his hand");
         cards.forEach((card)=>{
             this.playCard(player, card);
         });
     },
     playCard(player, card = null) {
-        if (!player.active) {
+        if (!player.active || !S.array.has(this.playersForRound, player)) {
             return;
         }
         
@@ -107,8 +75,6 @@ CardGame.extendPrototype({
         } else {
             player.removeCardFromHand(card);
         }
-        
-        console.log(player.name+" plays "+card.name);
         this.cardsPlayers[card.name] = player;
         this.cardPlayed(card);
         player.emit("played", card);
@@ -116,17 +82,19 @@ CardGame.extendPrototype({
     cardPlayed(card) {
         this.currentCards.push(card);
     },
+    clean() {
+        this.playersForRound = [];
+        this.played = new Set();
+        this.currentCards = [];
+    },
     startRound(players=[]) {
         
         if (this.roundStarted) {
             throw new Error("game.alreadyStarted");
         }
         
+        this.clean();
         this.roundNumber++;
-        
-        this.playersForRound = [];
-        this.played = new Set();
-        this.currentCards = [];
         
         if (players.length <= 0) {
             S.forEach(this.room.users, (player) => {
@@ -138,12 +106,46 @@ CardGame.extendPrototype({
             });
         }
         
-        this.emit("roundStarted", this);
+        if (this.playersForRound.length === 0) {
+            throw new Error("round.noPlayers");
+        }
+        
+        this.roundStarted = true;
+        
+        this.emit("roundStarted", this.roundNumber, this.playersForRound);
     },
     endRound() {
-        var winners = this.resolveRoundWinner();
         
-        this.emit("roundEnded", winners);
+        console.log(this.currentCards.length+" cards on table / "+this.toWin.length+" cards to win");
+        
+        var winners = this.resolveRoundWinner();
+        var roundNumber = this.roundNumber;
+        
+        this.roundStarted = false;
+
+        this.emit("roundEnded", roundNumber, winners);
+        
+        var numberWinners = winners.length;
+        if(numberWinners === 0) {
+            this.resolveNoWinnerRound();
+        } else if(numberWinners > 1) {
+            this.resolveTieRound(winners);
+        } else {
+            this.awardWinner(winners[0]);
+            
+            S.forEach(this.room.users, (player) => {
+                if(player.hand.length === 0 && player.active === true) {
+                    player.deactivate();
+                    this.emit("playerLost", player);
+                }
+            });
+            
+            if(this.roundNumber < this.maxRounds) {
+                this.startRound();
+            } else {
+                this.end();
+            }
+        }
     },
     resolveCardsPlayers(cards) {
         var players = [];
@@ -179,10 +181,19 @@ CardGame.extendPrototype({
             userObj = user;
         } else if (S.isString(user)) {
             userObj = new CardPlayer(null, user);
-            
         } else {
             throw new Error("cardGame.player.badType");
         }
         this.room.addUser(userObj);
+        return userObj;
+    },
+    end() {
+        this.clean();
+        this.declareGameWinner();
+        this.started  = false;
+        this.emit('ended');
+    },
+    declareGameWinner() {
+        console.log("I don't know!");
     }
 });

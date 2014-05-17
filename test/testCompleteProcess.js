@@ -30,12 +30,42 @@ test('test Bataille', function() {
     player3.markAsReady();
     player4.markAsReady();
     
-    bataille.on("roundStarted", function(){
+    bataille.on("roundStarted", function(roundNumber, players){
+        console.log("======== ROUND "+roundNumber+" STARTED ("+players.length+" players) =======");
         bataille.playCard(player1);
         bataille.playCard(player2);
         bataille.playCard(player3);
         bataille.playCard(player4);
     });
+    
+    bataille.on("started", function(){
+        console.log("######################### BEGIN GAME #########################"); 
+    });
+    
+    bataille.on("bataille", function(winners){
+        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~BATAILLE!~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    });
+    
+    bataille.on("roundEnded", function(roundNumber, winners) {
+        console.log("======== ROUND "+roundNumber+" ENDED =======");
+    });
+    
+    bataille.on("roundWinner", function(winner, cards) {
+        console.log("======== ROUND WINNER : "+winner.name+" ("+cards.length+" cards) =======");
+    });
+    
+    bataille.on("playerLost", function(player) {
+        console.log("++++++++++++++++++ LOST : "+player.name+" +++++++++++++++++++++++++++");
+    });
+    
+    bataille.on("gameWinner", function(winner){
+        console.log("################### == WINNER : "+winner.name+" ("+winner.hand.length+") == ####################");
+    });
+    
+    bataille.on("ended", function(){
+        console.log("############################ FINISHED #########################"); 
+    });
+    
     bataille.start();
 });
 

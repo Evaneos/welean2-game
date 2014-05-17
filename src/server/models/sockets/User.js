@@ -18,8 +18,8 @@ User.extendPrototype({
         this.application.removeUser(this);
     },
     _onReady() {
-        this.emitServer('ready');
         this.user.markAsReady();
+        this.emitServer('ready');
     },
     isReady() {
         return this.user.ready();
