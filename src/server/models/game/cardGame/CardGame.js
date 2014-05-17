@@ -122,7 +122,7 @@ CardGame.extendPrototype({
         var roundNumber = this.roundNumber;
         
         this.roundStarted = false;
-        
+
         this.emit("roundEnded", roundNumber, winners);
         
         var numberWinners = winners.length;
@@ -181,7 +181,6 @@ CardGame.extendPrototype({
             userObj = user;
         } else if (S.isString(user)) {
             userObj = new CardPlayer(null, user);
-            
         } else {
             throw new Error("cardGame.player.badType");
         }

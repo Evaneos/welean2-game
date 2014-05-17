@@ -65,8 +65,8 @@ Application.extendPrototype({
     },
     createUser(socketUser, name) {
         console.log('add user');
-        this.users.push(socketUser);
         var user = this.app.join(name);
+        this.users.push(socketUser);
         this.emitToMainBoards('player:connected', name);
         this.emitToUsers('player:connected', name);
         return user;
@@ -85,7 +85,7 @@ Application.extendPrototype({
         if (event === 'ready') {
             console.log(this.users.some((u) => {
                 console.log(u);
-                console.log(u.name, u.isReady(), u.user.state);
+                console.log(user, u.name, u.isReady(), u.user.state);
                 return !u.isReady();
             }));
             if (!this.users.some((u) => !u.isReady())) {
