@@ -49,7 +49,6 @@ Application.extendPrototype({
             var names = players.map((u) => u.name);
             this.mainboards.forEach((mainboard) => {
                 mainboard.once('ready', () => {
-                    console.log('ready');
                     if (this.areMainboardsReady()) {
                         this.emitToUsersFiltredByNames(names, 'round:started');
                     }
