@@ -19,7 +19,7 @@ function main() {
     });
 
     var gameScreen = $('.game');
-    var mydeck = gameScreen.find('.mydeck');
+    var mydeck = gameScreen.find('.card-container');
     var logList = gameScreen.find('.log');
     var rightside = logList.parent();
 
