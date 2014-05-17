@@ -12,6 +12,7 @@ User.extendPrototype({
         // TODO parent / common Mainboard + User
         socket.on('disconnect', this._onDisconnect.bind(this));
         socket.on('ready', this._onReady.bind(this));
+        socket.on('playCard', this._onPlayCard.bind(this));
     },
 
     _onDisconnect() {
@@ -20,6 +21,14 @@ User.extendPrototype({
     _onReady() {
         this.user.markAsReady();
         this.emitServer('ready');
+    },
+    _onPlayCard() {
+        logger.log('playCard evnt received');
+        var card = this.application.app.playCard(this.user);
+        console.log(card);
+        var data = { userName: this.name, cardId: card.id };
+        this.application.emitToMainBoards('player:cardPlayed', data);
+        this.emitClient('cardPlayed', data);
     },
     isReady() {
         return this.user.ready();

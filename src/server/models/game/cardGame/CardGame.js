@@ -77,6 +77,7 @@ CardGame.extendPrototype({
         this.cardsPlayers[card.name] = player;
         this.cardPlayed(card);
         player.emit("played", card);
+        return card;
     },
     cardPlayed(card) {
         this.currentCards.push(card);

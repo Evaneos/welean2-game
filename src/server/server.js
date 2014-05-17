@@ -1,5 +1,7 @@
 require('springbokjs-shim/es6');
 global.S = require('springbokjs-utils');
+var ConsoleLogger = require('springbokjs-logger/console');
+global.logger = new ConsoleLogger();
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -38,6 +40,8 @@ app.locals.basepath = argv.basepath || '/';
 
 require('./socket')(server, function(io) {
     io.sockets.on('connection', function(socket) {
+        socket.on('connect', console.log.bind(console, 'connect'));
+        socket.on('connection', console.log.bind(console, 'connection'));
         socket.on('room:join', function(data) {
             var game = SocketApplication.getOrCreate(data.token);
             if (!game) {
