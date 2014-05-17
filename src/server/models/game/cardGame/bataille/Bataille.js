@@ -82,8 +82,19 @@ Bataille.extendPrototype({
         return this.resolveCardsPlayers(cards);
     },
     resolveTieRound(winners) {
-        this.emit("bataille", winners);
-        this.startRound(winners);
+        var filteredWinners = [];
+        winners.forEach((player)=>{
+            if (this.checkLoser(player) === false) {
+                filteredWinners.push(player);
+            }
+        });
+        
+        if (filteredWinners.length === 1) {
+            this.finalizeRound(filteredWinners.pop());
+        } else {
+            this.emit("bataille", filteredWinners);
+            this.startRound(filteredWinners);
+        }
     },
     resolveNoWinnerRound() {
         throw new Error("bataille.impossible");
