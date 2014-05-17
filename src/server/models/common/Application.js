@@ -41,7 +41,7 @@ Application.extendPrototype({
         if (user instanceof User) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new User(null, user)
+            userObj = new User(null, user);
             
         } else {
             throw new Error("application.user.badType");
