@@ -127,9 +127,20 @@ function main() {
     socket.on('player:cardPlayed', function(data) {
         log('Le joueur "' + data.userName + '" a joué la carte ' + data.cardId);
         if (users[data.userName]) {
-            var user = users[data.userName];
-            // TODO Optimize (only update sprite class of current card)
-            user.$eltGame.find('.card-container').append(generateCard(data.cardId));
+            var user = users[data.userName],
+                card = $(generateCard(data.cardId))
+            ;
+
+            card.css({
+                'top': '1000px'
+            });
+            user.$eltGame.find('.card-container').append(card);
+            card.animate(
+                {
+                    'top': '0'
+                },
+                1000
+            );
         }
     });
     socket.on('player:roundWinner', function(data) {
@@ -138,7 +149,7 @@ function main() {
 
     socket.on('round:winner', function(data) {
         log('Winner: ' + data.userName);
-        window.setTimeout(waitForNextRound, 1500);
+        window.setTimeout(waitForNextRound, 2000);
     });
     socket.on('round:started', function(data) {
         log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));

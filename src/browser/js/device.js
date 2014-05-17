@@ -37,7 +37,21 @@ function main() {
         rightside.prop('scrollTop', rightside.prop('scrollHeight'));
         if (myTurn) {
             log('You played a card');
-            socket.emit('playCard');
+
+            var clone = mydeck.clone();
+
+            mydeck.after(clone);
+            clone.animate(
+                {
+                    'top': '-500px'
+                },
+                1500,
+                function() {
+                    $(this).remove();
+                    socket.emit('playCard');
+                }
+            );
+
             myTurn = false;
         }
     });
