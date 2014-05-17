@@ -178,7 +178,7 @@ CardGame.extendPrototype({
         if (user instanceof CardPlayer) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new CardPlayer(null, user)
+            userObj = new CardPlayer(null, user);
             
         } else {
             throw new Error("cardGame.player.badType");
