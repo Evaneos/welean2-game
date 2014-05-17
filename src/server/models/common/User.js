@@ -21,5 +21,8 @@ User.extendPrototype({
     markAsReady() {
         this.changeToState(User.states.READY);
         this.emit("ready");
+    },
+    markAsIdle() {
+        this.changeToState(User.states.IDLE);
     }
 });

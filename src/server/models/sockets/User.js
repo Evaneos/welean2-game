@@ -31,6 +31,9 @@ User.extendPrototype({
     isReady() {
         return this.user.ready();
     },
+    markAsIdle() {
+        return this.user.markAsIdle();
+    },
     emitServer: function(event, data) {
         console.log('User.emitServer', event, data);
         this.emit(event, data);
