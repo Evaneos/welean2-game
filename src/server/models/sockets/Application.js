@@ -65,8 +65,8 @@ Application.extendPrototype({
     },
     createUser(socketUser, name) {
         console.log('add user');
-        this.users.push(socketUser);
         var user = this.app.join(name);
+        this.users.push(socketUser);
         this.emitToMainBoards('player:connected', name);
         this.emitToUsers('player:connected', name);
         return user;
