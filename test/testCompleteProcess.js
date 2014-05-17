@@ -14,7 +14,7 @@ test('test Bataille', function() {
 	console.log("======================================================");
 	console.log("=====================BATAILLE=========================");
 	console.log("======================================================");
-    var bataille = new Bataille("batailleToken", 32, 20);
+    var bataille = new Bataille("batailleToken", 32, 50);
 	
     var player1 = bataille.join("foo");
     var player2 = bataille.join("bar");
