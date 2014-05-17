@@ -16,7 +16,16 @@ ClassicDeck.extendPrototype({
         var cards = [];
         ClassicCard.colorsValues.forEach((color) => {
             ClassicCard.valuesValues.forEach((value) => {
-                if (this.number == 52 || (value!==2 && value!==3 && value!==4 && value!==5 && value!==6)) {
+                if (
+                    this.number == 52 ||
+                    (
+                        value!==ClassicCard.values.TWO &&
+                        value!==ClassicCard.values.THREE &&
+                        value!==ClassicCard.values.FOUR &&
+                        value!==ClassicCard.values.FIVE &&
+                        value!==ClassicCard.values.SIX
+                    )
+                ) {
                     cards.push(new ClassicCard(value+" of "+color, value, color));
                 }
             });
