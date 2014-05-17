@@ -49,6 +49,7 @@ Application.extendPrototype({
             throw new Error("application.user.badType");
         }
         this.room.addUser(userObj);
+        return userObj;
     },
     quit(user) {
         this.room.removeUser(user);

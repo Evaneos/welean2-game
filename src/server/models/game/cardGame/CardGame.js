@@ -184,5 +184,6 @@ CardGame.extendPrototype({
             throw new Error("cardGame.player.badType");
         }
         this.room.addUser(userObj);
+        return userObj;
     }
 });
