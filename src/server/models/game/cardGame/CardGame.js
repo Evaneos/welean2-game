@@ -71,7 +71,7 @@ CardGame.extendPrototype({
         });
     },
     playCard(player, card = null) {
-        if (!player.active || !S.array.has(this.playersForRound, player)) {
+        if (!this.started || !this.roundStarted || !player.active || !S.array.has(this.playersForRound, player)) {
             return;
         }
         
@@ -94,6 +94,10 @@ CardGame.extendPrototype({
         this.currentCards = [];
     },
     startRound(players=[], incrementRoundNumber=true) {
+        
+        if(!this.started) {
+        	return;
+        }
         
         if (this.roundStarted) {
             throw new Error("game.alreadyStarted");

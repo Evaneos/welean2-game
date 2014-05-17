@@ -30,9 +30,7 @@ Application.extendPrototype({
             });
         });
         app.on('ended', () => {
-            this.users.forEach((user) => {
-                user.markAsIdle();
-            });
+            this.users.forEach((u) => u.markAsIdle());
             process.nextTick(() => {
                 this.emitToAll('application:ended');
             });
@@ -49,15 +47,23 @@ Application.extendPrototype({
 
         app.on('roundStarted', (roundNumber, players) => {
             var names = players.map((u) => u.name);
-            setTimeout(() => {
-                this.emitToMainBoards('round:started', { roundNumber: roundNumber, playersNames: names });
-                this.emitToUsersFiltredByNames(names, 'round:started');
+            this.mainboards.forEach((mainboard) => {
+                mainboard.once('ready', () => {
+                    if (this.areMainboardsReady()) {
+                        this.emitToUsersFiltredByNames(names, 'round:started');
+                    }
+                });
             });
+            this.emitToMainBoards('round:started', { roundNumber: roundNumber, playersNames: names });
         });
         app.on('gameWinner', (winners) => {
             setTimeout(() => {
             });
         });
+    },
+
+    areMainboardsReady() {
+        return !this.mainboards.some((mb) => !mb.isReady());
     },
 
     emitToMainBoards(event, data) {
@@ -97,6 +103,7 @@ Application.extendPrototype({
 
     initialData() {
         return {
+            started: this.app.started,
             users: this.users.map((user) => {
                 return { name: user.name, ready: user.isReady() };
             }),
@@ -108,9 +115,14 @@ Application.extendPrototype({
         logger.debug('add mainboard');
         this.mainboards.push(socket);
     },
-    removeMainboard(socket) {
+    removeMainboard(mainboard) {
         logger.debug('remove mainboard');
-        S.array.remove(this.mainboards, socket);
+        S.array.remove(this.mainboards, mainboard);
+        if (!mainboard.isReady()) {
+            mainboard.emit('ready');//prevent application for beeing lost
+        }
+        mainboard.removeAllListeners();
+        // This should be paused, but the fonctionnality is not yet implemented
         //this.app.pause();
     },
     createUser(socketUser, name) {
