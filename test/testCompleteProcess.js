@@ -26,10 +26,17 @@ test('test Bataille', function() {
     player3.markAsReady();
     player4.markAsReady();
     
+    var i = 0;
+    
     bataille.on("roundStarted", function(roundNumber, players){
+        i++;
         console.log("======== ROUND "+roundNumber+" STARTED ("+players.length+" players) =======");
         bataille.playCard(player1);
         bataille.playCard(player2);
+        if (i==20) {
+        	console.log("---------------- END REQUESTED ---------------");
+        	bataille.end();
+        }
         bataille.playCard(player3);
         bataille.playCard(player4);
     });
