@@ -9,9 +9,11 @@ Mainboard.extendPrototype({
         // Sockets events
         socket.on('disconnect', this._onDisconnect.bind(this));
 
+
         // Application events
         application.on('player:ready', this._onPlayerReady.bind(this));
 
+        this.socket.emit('initialData', application.initialData());
         application.addMainboard(this);
     },
 

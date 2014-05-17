@@ -36,6 +36,15 @@ Application.extendPrototype({
         this.emitToUsers(event, data);
     },
 
+    initialData() {
+        return {
+            users: this.users.map((user) => {
+                return { name: user.name, ready: user.isReady() };
+            }),
+            usersReadyCount: this.app.usersReadyCount
+        };
+    },
+
     addMainboard(socket) {
         console.log('add mainboard');
         this.mainboards.push(socket);

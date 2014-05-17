@@ -8,5 +8,5 @@ module.exports = function(req, res) {
         return res.redirect('/');
     }
 
-    res.render(app.self.gameKey + '/roomboard/index', { token : token });
+    res.render(app.self.gameKey + '/roomboard/index', { token : token, domainName: req.headers.host });
 };

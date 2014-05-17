@@ -14,22 +14,32 @@
     </head>
     <body class="device">
         <div class="container">
-            hello device <%= name %> :)
-            <script type="text/javascript">
-                if (window.navigator.vibrate) {
-                    window.navigator.vibrate([100,30,100,30,100,200,200,30,200,30,200,200,100,30,100,30,100]);
-                } else {
-                    alert('vibration api is not available !!');
-                }
-            </script>
+            <div class="welcome">
+                <h1>Bienvenue au jeu de bataille <%= name %> :)</h1>
+                <script type="text/javascript">
+                    if (window.navigator.vibrate) {
+                        window.navigator.vibrate([100,30]);
+                    } else {
+                        alert('vibration api is not available !!');
+                    }
+                </script>
 
-            <button onclick="$(this).insertAfter($('<span>Vous êtes prêt</span>')).remove(); socket.emit('ready');">Je suis prêt !</button>
+                <a class="button">Je suis prêt !</a>
+                <div class="iamready">Vous êtes prêt<div>En attente des autres joueurs...</div></div>
+            </div>
+            <div class="game">
+                <div class="mydeck">
+                </div>
+                <div class="rightside">
+                    <ul class="log">
+                    </ul>
+                </div>
+            </div>
         </div>
+        <script type="text/javascript">
+            client = "device";
+            token = "<%= token %>";
+            name = "<%= name %>";
+        </script>
     </body>
-
-    <script type="text/javascript">
-        client = "device";
-        token = "<%= token %>";
-        name = "<%= name %>";
-    </script>
 </html>

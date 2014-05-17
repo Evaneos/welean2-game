@@ -12,12 +12,23 @@
         <script type="text/javascript" src="<%= basepath %>socket.io/socket.io.js"></script>
         <script type="text/javascript" src="<%= basepath %>dist/board.js"></script>
     </head>
-    <body>
+    <body class="board">
         <div class="container">
-            la bataille, vue du board <a href="/play/<%= token %>">smartphone view</a>
-            <ul id="list-users"></ul>
-            <div class="infos">
-                <span class="playersCount">0</span> joueurs<span class="infosPlayersReady"> dont <span class="playersReadyCount">0</span> prêts</span>
+            <div class="rightside">
+                <ul class="firstpart" id="list-users"></ul>
+                <ul class="secondpart log">
+                </ul>
+            </div>
+            <div class="welcome">
+                <h1>Bienvenue au jeu de bataille !</h1>
+                <h2>Connectez-vous dès maintenant avec l'url <a href="/play/<%= token %>">http://<%= domainName %>/play/<%= token %></a></h2>
+                <div class="infos">
+                    <span class="playersCount">0</span> joueurs<span class="infosPlayersReady"> dont <span class="playersReadyCount">0</span> prêts</span>
+                </div>
+            </div>
+            <div class="game">
+                <div class="cards">
+                </div>
             </div>
         </div>
     </body>
