@@ -8,12 +8,12 @@ module.exports = Bataille;
 Bataille.defineProperty("gameKey", "bataille");
 
 Bataille.extendPrototype({
-    construct(token, deckSize=52, maxRounds=100) {
+    construct(token, options = {}) {
         
-        this.deckSize = deckSize;
+        this.deckSize = options.deckSize || 52;
         this.toWin = [];
         
-        Bataille.superConstruct.call(this, token, 4, 2, maxRounds);
+        Bataille.superConstruct.call(this, token, 4, 2, (options.maxRounds || 50));
     },
     buildDeck() {
         this.deck = new ClassicDeck(this.deckSize);
