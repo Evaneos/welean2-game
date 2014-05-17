@@ -68,12 +68,13 @@ function main() {
         });
     });
 
-    socket.on('application:start', function() {
+    socket.on('application:started', function() {
         log('Le jeu commence !');
         welcomeScreen.hide();
         gameScreen.show();
     });
-    socket.on('application:end', function() {
+    socket.on('application:ended', function() {
+        log('Le jeu est terminé. Prêt pour une nouvelle partie ?');
         usersReady = 0;
         $('.playersReadyCount').text(usersReady);
         gameScreen.hide();
@@ -95,6 +96,12 @@ function main() {
         if (users[name]) {
             users[name].markAsReady();
         }
+    });
+    socket.on('player:cardPlayed', function(data) {
+        log('Le joueur "' + data.userName + '" a joué la carte ' + data.cardId);
+    });
+    socket.on('player:roundWinner', function(data) {
+        log('Le joueur "' + data.userName + '" a gagné ce tour !');
     });
     }catch(err) {
         console.error(err);

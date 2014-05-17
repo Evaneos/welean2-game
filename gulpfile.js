@@ -33,7 +33,7 @@ require('springbokjs-base/gulptask.js')(pkg, gulp, {
         "predef": [ "S", 'io', '$' ]
     },
     jshintServerOptions: {
-        "predef": [ "S" ]
+        "predef": [ "S", 'logger' ]
     },
 });
 

@@ -20,15 +20,26 @@ function main() {
 
     var gameScreen = $('.game');
     var mydeck = gameScreen.find('.mydeck');
-    var log = gameScreen.find('.log');
-    var rightside = log.parent();
+    var logList = gameScreen.find('.log');
+    var rightside = logList.parent();
+
+    var log = function(message) {
+        logList.append($('<li>').text(message));
+    };
+
+    var myTurn = false;
     mydeck.on('touchstart', function() {
-        log.append($('<li>').text('You started touching your deck'));
+        log('You started touching your deck');
         rightside.prop('scrollTop', rightside.prop('scrollHeight'));
     });
     mydeck.on('touchend', function() {
-        log.append($('<li>').text('You stopped touching your deck'));
+        log('You stopped touching your deck');
         rightside.prop('scrollTop', rightside.prop('scrollHeight'));
+        if (myTurn) {
+            log('You played a card');
+            socket.emit('playCard');
+            myTurn = false;
+        }
     });
 
     // Events
@@ -39,14 +50,27 @@ function main() {
         console.log('player:disconnected', username);
     });
 
-    socket.on('application:start', function(username) {
+    socket.on('application:started', function(username) {
         welcomeScreen.hide();
         gameScreen.show();
+        myTurn = true;
     });
-    socket.on('application:end', function() {
+    socket.on('application:ended', function() {
         readyInfo.hide();
         buttonReady.show();
         gameScreen.hide();
         welcomeScreen.show();
+    });
+
+
+    socket.on('cardPlayed', function(data) {
+        log('cardPlayed' + data.cardId);
+    });
+
+    socket.on('roundLost', function() {
+        log('You lost the round :( Maybe the next one :)');
+    });
+    socket.on('roundWon', function() {
+        log('You won the round !!!');
     });
 }
