@@ -19,12 +19,12 @@ test('test Bataille', function() {
     var player1 = bataille.join("foo");
     var player2 = bataille.join("bar");
     var player3 = bataille.join("toto");
-    var player4 = bataille.join("tutu");
+    //var player4 = bataille.join("tutu");
     
     player1.markAsReady();
     player2.markAsReady();
     player3.markAsReady();
-    player4.markAsReady();
+    //player4.markAsReady();
     
     var i = 0;
     
@@ -38,7 +38,7 @@ test('test Bataille', function() {
         	bataille.end();
         }
         bataille.playCard(player3);
-        bataille.playCard(player4);
+        //bataille.playCard(player4);
     });
     
     bataille.on("started", function(){

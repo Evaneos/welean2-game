@@ -51,7 +51,9 @@ CardGame.extendPrototype({
         var i = 0;
         while ((numberPerPlayer===0 || i<numberPerPlayer) && this.deck.remaining>0 ) {
             S.forEach(this.room.users, (player) => {
-                player.addCardToHand(this.deck.draw(i));
+            	if (this.deck.remaining > 0) {
+            		player.addCardToHand(this.deck.draw(i));
+            	}
             });
             i++;
         }
