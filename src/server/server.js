@@ -20,6 +20,10 @@ var argv = require('minimist')(process.argv.slice(2), {
     }
 });
 
+process.on('uncaughtException',function(err){
+    console.error(err.stack);
+});
+
 var app = express();
 
 
