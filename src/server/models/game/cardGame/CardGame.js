@@ -6,7 +6,7 @@ var CardGame = Application.extend();
 module.exports = CardGame;
 
 CardGame.extendPrototype({
-    construct(socket, token, usersMax, usersMin) {
+    construct(token, usersMax, usersMin, maxRounds=50) {
         CardGame.superConstruct.apply(this, arguments);
         this.buildDeck();
         this.currentCards = [];
@@ -16,7 +16,7 @@ CardGame.extendPrototype({
         this.roundStarted = false;
         this.cardsPlayers = {};
         
-        this.maxRounds = 50;
+        this.maxRounds = maxRounds;
         
         this.on("allPlayersPlayed", () => {
             this.endRound();
@@ -35,11 +35,9 @@ CardGame.extendPrototype({
         console.log("Let's Play !");
     },
     buildDeck() {
-        console.log("Building deck...");
         this.deck = new Deck();
     },
     shuffleDeck() {
-        console.log("Shuffling deck...");
         this.deck.shuffle();
         this.emit('shuffled');
     },
@@ -54,8 +52,9 @@ CardGame.extendPrototype({
         this.emit('dealt');
     },
     drawCard(player, number=1) {
-        console.log("Drawing "+number+" cards...");
-        player.addCardToHand(this.deck.draw(number));
+        var cards = this.deck.draw(number);
+        player.addCardToHand(cards);
+        this.emit("drawn", player, cards);
     },
     winningCards(cards) {
         console.log("I can't decide!");
@@ -88,14 +87,16 @@ CardGame.extendPrototype({
         this.played = new Set();
         this.currentCards = [];
     },
-    startRound(players=[]) {
+    startRound(players=[], incrementRoundNumber=true) {
         
         if (this.roundStarted) {
             throw new Error("game.alreadyStarted");
         }
         
         this.clean();
-        this.roundNumber++;
+        if (incrementRoundNumber === true) {
+            this.roundNumber++;
+        }
         
         if (players.length <= 0) {
             S.forEach(this.room.users, (player) => {
@@ -115,6 +116,23 @@ CardGame.extendPrototype({
         
         this.emit("roundStarted", this.roundNumber, this.playersForRound);
     },
+    finalizeRound(winner) {
+        this.awardWinner(winner);
+        
+        var countActivePlayers = 0;
+        S.forEach(this.room.users, (player) => {
+            this.checkLoser(player);
+            if(player.active === true) {
+                countActivePlayers++;
+            }
+        });
+        
+        if(this.roundNumber < this.maxRounds && countActivePlayers>1) {
+            this.startRound();
+        } else {
+            this.end();
+        }
+    },
     endRound() {
         
         console.log(this.currentCards.length+" cards on table / "+this.toWin.length+" cards to win");
@@ -132,20 +150,7 @@ CardGame.extendPrototype({
         } else if(numberWinners > 1) {
             this.resolveTieRound(winners);
         } else {
-            this.awardWinner(winners[0]);
-            
-            S.forEach(this.room.users, (player) => {
-                if(player.hand.length === 0 && player.active === true) {
-                    player.deactivate();
-                    this.emit("playerLost", player);
-                }
-            });
-            
-            if(this.roundNumber < this.maxRounds) {
-                this.startRound();
-            } else {
-                this.end();
-            }
+            this.finalizeRound(winners[0]);
         }
     },
     resolveCardsPlayers(cards) {
@@ -181,7 +186,7 @@ CardGame.extendPrototype({
         if (user instanceof CardPlayer) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new CardPlayer(null, user);
+            userObj = new CardPlayer(user);
         } else {
             throw new Error("cardGame.player.badType");
         }
@@ -196,5 +201,13 @@ CardGame.extendPrototype({
     },
     declareGameWinner() {
         console.log("I don't know!");
+    },
+    checkLoser(player) {
+        if(player.hand.length === 0 && player.active === true) {
+            player.deactivate();
+            this.emit("playerLost", player);
+            return true;
+        }
+        return false;
     }
 });

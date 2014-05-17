@@ -55,7 +55,7 @@ Room.extendPrototype({
             throw new Error("room.state.notAvailable");
         }
         this.state = state;
-        this.emit("roomStatusChanged", this, state);
+        this.emit("roomStatusChanged", state);
     },
     ready() {
         if (this.state === Room.states.WAITING_FOR_USERS) {

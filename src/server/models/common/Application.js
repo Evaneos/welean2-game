@@ -5,15 +5,14 @@ var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
 
 Application.extendPrototype({
-    construct(socket, token, usersMax, usersMin) {
-        this.socket = socket;
+    construct(token, usersMax, usersMin) {
         this.token = token;
         this.room = new Room(token, usersMax, usersMin);
         this.started  = false;
     },
     start() {
         if (this.canBeStarted()) {
-            console.log('can start');
+            console.log('Application can start');
             S.forEach(this.room.users, (player) => {
                 player.activate();
             });
@@ -22,7 +21,7 @@ Application.extendPrototype({
             this.emit('started');
             this.run();
         } else {
-            console.log("Can't start!");
+            console.log("Application can't start!");
         }
     },
     tryToStart() {
@@ -43,7 +42,7 @@ Application.extendPrototype({
         if (user instanceof User) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new User(null, user);
+            userObj = new User(user);
             
         } else {
             throw new Error("application.user.badType");

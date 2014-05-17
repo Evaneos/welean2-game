@@ -4,8 +4,8 @@ var CardPlayer = Player.extend();
 module.exports = CardPlayer;
 
 CardPlayer.extendPrototype({
-    construct(socket, name) {
-        CardPlayer.superConstruct.call(this, socket, name);
+    construct(name) {
+        CardPlayer.superConstruct.call(this, name);
         this.hand = [];
     },
     hasCardInHand(card){

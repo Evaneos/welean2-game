@@ -5,9 +5,8 @@ User.defineProperty("states", { IDLE : 1, READY : 2, AWAY : 3});
 User.defineProperty("statesValues", Object.keys(User.states).map((v) => User.states[v]));
 
 User.extendPrototype({
-    construct(socket, name) {
+    construct(name) {
         this.name = name;
-        this.socket = socket;
         this.state = User.states.IDLE;
     },
     changeToState(state) {
@@ -21,5 +20,6 @@ User.extendPrototype({
     },
     markAsReady() {
         this.changeToState(User.states.READY);
+        this.emit("ready");
     }
 });

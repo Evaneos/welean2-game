@@ -7,7 +7,7 @@ var expect = assert.strictEqual;
 var Application = require('../lib/server/models/common/Application');
 
 test('test Application', function() {
-    var app = new Application(null, "mytoken", 5, 2);
+    var app = new Application("mytoken", 5, 2);
     expect("mytoken", app.token);
     expect("mytoken", app.room.token);
     expect(5, app.room.usersMax);

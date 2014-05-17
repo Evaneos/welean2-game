@@ -10,7 +10,7 @@ var ClassicCard = require('../lib/server/models/game/cardGame/classic/ClassicCar
 var ClassicDeck = require('../lib/server/models/game/cardGame/classic/ClassicDeck');
 
 test('test Bataille', function() {
-	var bataille = new Bataille(null, "cardToken");
+	var bataille = new Bataille("cardToken");
 	expect("cardToken", bataille.token);
     expect("cardToken", bataille.room.token);
     expect(4, bataille.room.usersMax);
@@ -19,7 +19,7 @@ test('test Bataille', function() {
     expect(52, bataille.deck.cards.length);
     expect(0, bataille.currentCards.length);
     
-    var player = new CardPlayer(null, "foo");
+    var player = new CardPlayer("foo");
     bataille.room.addUser(player);
     
     bataille.shuffleDeck();

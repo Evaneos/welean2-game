@@ -14,8 +14,8 @@ test('test Room', function() {
     expect(5, room.usersMax);
     expect(2, room.usersMin);
     
-    var user1 = new User(null, "foo");
-    var user2 = new User(null, "bar");
+    var user1 = new User("foo");
+    var user2 = new User("bar");
     
     expect(false, room.exists(user1));
     room.addUser(user1);

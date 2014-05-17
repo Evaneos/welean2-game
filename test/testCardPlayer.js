@@ -9,7 +9,7 @@ var User = require('../lib/server/models/common/User');
 var Card = require('../lib/server/models/game/cardGame/Card');
 
 test('test CardPlayer', function() {
-	var user = new CardPlayer(null, "foo");
+	var user = new CardPlayer("foo");
     
     expect("foo", user.name);
     expect(false, user.ready());
