@@ -26,6 +26,7 @@
             <div class="welcome">
                 <h1>Bienvenue au jeu de bataille !</h1>
                 <h2>Connectez-vous dès maintenant avec l'url <a href="/play/<%= token %>">http://<%= domainName %>/play/<%= token %></a></h2>
+                <div id="qrcode"></div>
                 <div class="infos">
                     <span class="playersCount">0</span> joueurs<span class="infosPlayersReady"> dont <span class="playersReadyCount">0</span> prêts</span>
                 </div>
@@ -40,5 +41,8 @@
     <script type="text/javascript">
         client = "board";
         token = "<%= token %>";
+
+        // Generate qrcode
+        $('#qrcode').qrcode({width: 128,height: 128,text: "http://<%= domainName %>/play/<%= token %>"});
     </script>
 </html>

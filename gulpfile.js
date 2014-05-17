@@ -20,6 +20,7 @@ require('springbokjs-base/gulptask.js')(pkg, gulp, {
                 // included before files from src/browser/js/ folder.
                 'node_modules/springbokjs-shim/init.js',
                 'bower_components/jquery/dist/jquery.min.js',
+                'public/vendor/jquery.qrcode.min.js',
                 //'node_modules/ejs/ejs.min.js'
             ],
             'js/device.js': [

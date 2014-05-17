@@ -8,6 +8,7 @@ function main() {
 
     var welcomeScreen = $('.welcome');
     var gameScreen = $('.game');
+    var cardsContainer = gameScreen.find('.cards');
 
     var usersList = $('#list-users');
     var logList = $('#log'), logListParent = logList.parent();
@@ -25,14 +26,18 @@ function main() {
     var User = S.newClass({
         construct(name) {
             this.name = name;
-            this.$elt = $('<li/>').text(name);
-            usersList.append(this.$elt);
+            this.$eltList = $('<li/>').text(name);
+            this.$eltGame = $('<div class="user"><div class="card-container"></div><div class="name"></div></div>');
+            usersList.append(this.$eltList);
+            cardsContainer.append(this.$eltGame);
             usersCount++;
             $('.playersCount').text(usersCount);
+            this.$eltGame.find('.name').text(name);
         },
         remove() {
-            this.$elt.css('text-decoration', 'line-through').fadeOut(1000, function() { $(this).remove(); });
-            delete this.$elt;
+            this.$eltList.css('text-decoration', 'line-through').fadeOut(1000, function() { $(this).remove(); });
+            delete this.$eltList;
+            delete this.$eltGame;
             delete users[this.name];
             usersCount--;
             $('.playersCount').text(usersCount);
@@ -49,7 +54,7 @@ function main() {
         },
         markAsReady() {
             this.ready = true;
-            this.$ready = $('<span> ✔</span>').appendTo(this.$elt).fadeIn().fadeOut().fadeIn();
+            this.$ready = $('<span> ✔</span>').appendTo(this.$eltList).fadeIn().fadeOut().fadeIn();
             usersReady++;
             $('.playersReadyCount').text(usersReady);
             /*The server should be the one to starts the game
@@ -59,7 +64,7 @@ function main() {
         }
     });
 
-    var socket = io.connect('http://localhost');
+    var socket = io.connect('/');
     global.socket = socket;
 
     // Join room
@@ -109,6 +114,11 @@ function main() {
     });
     socket.on('player:cardPlayed', function(data) {
         log('Le joueur "' + data.userName + '" a joué la carte ' + data.cardId);
+        if (users[data.userName]) {
+            var user = users[data.userName];
+            // TODO Optimize (only update sprite class of current card)
+            user.$eltGame.find('.card-container').append(generateCard(data.cardId));
+        }
     });
     socket.on('player:roundWinner', function(data) {
         log('Le joueur "' + data.userName + '" a gagné ce tour !');
@@ -120,6 +130,12 @@ function main() {
     socket.on('round:started', function(data) {
         log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));
     });
+
+
+    var generateCard = function(id, face = true) {
+        var cssClass = 'sprite-deck-' + (face ? id : 'backside');
+        return '<div class="icon-big ' + cssClass + '"></div>';
+    };
 
     }catch(err) {
         console.error(err);
