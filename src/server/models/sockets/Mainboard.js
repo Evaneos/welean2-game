@@ -27,6 +27,12 @@ Mainboard.extendPrototype({
         this.emit(event, data);
         this.socket.emit(event, data);
     },
+    isReady() {
+        return this.ready;
+    },
+    markAsIdle() {
+        return this.ready = false;
+    },
 
     _onPlayerReady(name) {
         this.ready = true;
