@@ -41,6 +41,9 @@ function main() {
             var clone = mydeck.clone();
 
             mydeck.after(clone);
+
+            socket.emit('playCard');
+
             clone.animate(
                 {
                     'top': '-500px'
@@ -48,7 +51,6 @@ function main() {
                 1500,
                 function() {
                     $(this).remove();
-                    socket.emit('playCard');
                 }
             );
 
