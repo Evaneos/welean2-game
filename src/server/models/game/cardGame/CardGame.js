@@ -6,7 +6,7 @@ var CardGame = Application.extend();
 module.exports = CardGame;
 
 CardGame.extendPrototype({
-    construct(token, usersMax, usersMin) {
+    construct(token, usersMax, usersMin, maxRounds=50) {
         CardGame.superConstruct.apply(this, arguments);
         this.buildDeck();
         this.currentCards = [];
@@ -16,7 +16,7 @@ CardGame.extendPrototype({
         this.roundStarted = false;
         this.cardsPlayers = {};
         
-        this.maxRounds = 50;
+        this.maxRounds = maxRounds;
         
         this.on("allPlayersPlayed", () => {
             this.endRound();

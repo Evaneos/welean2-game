@@ -13,7 +13,7 @@ test('test Bataille', function() {
 	console.log("======================================================");
 	console.log("=====================BATAILLE=========================");
 	console.log("======================================================");
-    var bataille = new Bataille("batailleToken");
+    var bataille = new Bataille("batailleToken", 10);
 	
     var player1 = new CardPlayer("foo");
     var player2 = new CardPlayer("bar");
