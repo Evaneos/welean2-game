@@ -22,7 +22,7 @@ module.exports = function(req, res) {
     token = 1;
 
     // Create an Application with a Room, ready to receive sockets
-    var app = new ApplicationFactory().get(gameKey, null, token);
+    var app = new ApplicationFactory().get(gameKey, req.query);
 
     token2app[token] = app;
 
