@@ -5,8 +5,7 @@ var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
 
 Application.extendPrototype({
-    construct(socket, token, usersMax, usersMin) {
-        this.socket = socket;
+    construct(token, usersMax, usersMin) {
         this.token = token;
         this.room = new Room(token, usersMax, usersMin);
         this.started  = false;
@@ -43,7 +42,7 @@ Application.extendPrototype({
         if (user instanceof User) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new User(null, user);
+            userObj = new User(user);
             
         } else {
             throw new Error("application.user.badType");

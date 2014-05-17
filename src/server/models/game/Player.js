@@ -4,8 +4,8 @@ var Player = User.extend();
 module.exports = Player;
 
 Player.extendPrototype({
-    construct(socket, name) {
-        Player.superConstruct.call(this, socket, name);
+    construct(name) {
+        Player.superConstruct.call(this, name);
         this.active = false;
     },
     activate() {

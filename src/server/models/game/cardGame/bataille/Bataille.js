@@ -8,8 +8,8 @@ module.exports = Bataille;
 Bataille.defineProperty("gameKey", "bataille");
 
 Bataille.extendPrototype({
-    construct(socket, token) {
-        Bataille.superConstruct.call(this, socket, token, 4, 2);
+    construct(token) {
+        Bataille.superConstruct.call(this, token, 4, 2);
         this.toWin = [];
     },
     buildDeck() {

@@ -13,12 +13,12 @@ test('test Bataille', function() {
 	console.log("======================================================");
 	console.log("=====================BATAILLE=========================");
 	console.log("======================================================");
-    var bataille = new Bataille(null, "batailleToken");
+    var bataille = new Bataille("batailleToken");
 	
-    var player1 = new CardPlayer(null, "foo");
-    var player2 = new CardPlayer(null, "bar");
-    var player3 = new CardPlayer(null, "toto");
-    var player4 = new CardPlayer(null, "tutu");
+    var player1 = new CardPlayer("foo");
+    var player2 = new CardPlayer("bar");
+    var player3 = new CardPlayer("toto");
+    var player4 = new CardPlayer("tutu");
     
     bataille.join(player1);
     bataille.join(player2);

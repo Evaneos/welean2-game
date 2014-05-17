@@ -6,7 +6,7 @@ var CardGame = Application.extend();
 module.exports = CardGame;
 
 CardGame.extendPrototype({
-    construct(socket, token, usersMax, usersMin) {
+    construct(token, usersMax, usersMin) {
         CardGame.superConstruct.apply(this, arguments);
         this.buildDeck();
         this.currentCards = [];
@@ -180,7 +180,7 @@ CardGame.extendPrototype({
         if (user instanceof CardPlayer) {
             userObj = user;
         } else if (S.isString(user)) {
-            userObj = new CardPlayer(null, user);
+            userObj = new CardPlayer(user);
         } else {
             throw new Error("cardGame.player.badType");
         }

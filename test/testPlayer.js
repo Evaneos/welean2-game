@@ -8,7 +8,7 @@ var Player = require('../lib/server/models/game/Player');
 var User = require('../lib/server/models/common/User');
 
 test('test Player', function() {
-	var user = new Player(null, "foo");
+	var user = new Player("foo");
     
     expect("foo", user.name);
     expect(false, user.ready());
