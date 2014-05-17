@@ -12,7 +12,7 @@ Application.extendPrototype({
     },
     start() {
         if (this.canBeStarted()) {
-            console.log('can start');
+            console.log('Application can start');
             S.forEach(this.room.users, (player) => {
                 player.activate();
             });
@@ -21,7 +21,7 @@ Application.extendPrototype({
             this.emit('started');
             this.run();
         } else {
-            console.log("Can't start!");
+            console.log("Application can't start!");
         }
     },
     tryToStart() {

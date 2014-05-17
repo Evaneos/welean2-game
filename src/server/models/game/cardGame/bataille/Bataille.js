@@ -8,17 +8,18 @@ module.exports = Bataille;
 Bataille.defineProperty("gameKey", "bataille");
 
 Bataille.extendPrototype({
-    construct(token, maxRounds=100) {
+    construct(token, deckSize=52, maxRounds=100) {
         Bataille.superConstruct.call(this, token, 4, 2, maxRounds);
+        
+        this.deckSize = deckSize;
+        
         this.toWin = [];
     },
     buildDeck() {
-        console.log("Building deck...");
-        this.deck = new ClassicDeck(52);
+        this.deck = new ClassicDeck(this.deckSize);
         this.emit("deckBuilt", this.deck);
     },
     run() {
-        console.log("Let's Play Bataille !");
         this.shuffleDeck();
         this.deal();
         this.startRound();
@@ -93,7 +94,7 @@ Bataille.extendPrototype({
             this.finalizeRound(filteredWinners.pop());
         } else {
             this.emit("bataille", filteredWinners);
-            this.startRound(filteredWinners);
+            this.startRound(filteredWinners, false);
         }
     },
     resolveNoWinnerRound() {

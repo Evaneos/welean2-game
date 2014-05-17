@@ -35,11 +35,9 @@ CardGame.extendPrototype({
         console.log("Let's Play !");
     },
     buildDeck() {
-        console.log("Building deck...");
         this.deck = new Deck();
     },
     shuffleDeck() {
-        console.log("Shuffling deck...");
         this.deck.shuffle();
         this.emit('shuffled');
     },
@@ -54,8 +52,9 @@ CardGame.extendPrototype({
         this.emit('dealt');
     },
     drawCard(player, number=1) {
-        console.log("Drawing "+number+" cards...");
-        player.addCardToHand(this.deck.draw(number));
+        var cards = this.deck.draw(number);
+        player.addCardToHand(cards);
+        this.emit("drawn", player, cards);
     },
     winningCards(cards) {
         console.log("I can't decide!");
@@ -87,14 +86,16 @@ CardGame.extendPrototype({
         this.played = new Set();
         this.currentCards = [];
     },
-    startRound(players=[]) {
+    startRound(players=[], incrementRoundNumber=true) {
         
         if (this.roundStarted) {
             throw new Error("game.alreadyStarted");
         }
         
         this.clean();
-        this.roundNumber++;
+        if (incrementRoundNumber === true) {
+            this.roundNumber++;
+        }
         
         if (players.length <= 0) {
             S.forEach(this.room.users, (player) => {
@@ -117,11 +118,15 @@ CardGame.extendPrototype({
     finalizeRound(winner) {
         this.awardWinner(winner);
         
+        var countActivePlayers = 0;
         S.forEach(this.room.users, (player) => {
             this.checkLoser(player);
+            if(player.active === true) {
+                countActivePlayers++;
+            }
         });
         
-        if(this.roundNumber < this.maxRounds) {
+        if(this.roundNumber < this.maxRounds && countActivePlayers>1) {
             this.startRound();
         } else {
             this.end();
@@ -201,8 +206,7 @@ CardGame.extendPrototype({
             player.deactivate();
             this.emit("playerLost", player);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 });

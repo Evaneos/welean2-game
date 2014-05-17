@@ -10,10 +10,11 @@ var ClassicCard = require('../lib/server/models/game/cardGame/classic/ClassicCar
 var ClassicDeck = require('../lib/server/models/game/cardGame/classic/ClassicDeck');
 
 test('test Bataille', function() {
+    console.log("\n");
 	console.log("======================================================");
 	console.log("=====================BATAILLE=========================");
 	console.log("======================================================");
-    var bataille = new Bataille("batailleToken", 40);
+    var bataille = new Bataille("batailleToken", 32, 20);
 	
     var player1 = bataille.join("foo");
     var player2 = bataille.join("bar");
@@ -58,7 +59,7 @@ test('test Bataille', function() {
     });
     
     bataille.on("ended", function(){
-        console.log("############################ FINISHED #########################"); 
+        console.log("############################ FINISHED #########################\n"); 
     });
     
     bataille.start();
