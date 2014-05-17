@@ -14,7 +14,7 @@ test('test Bataille', function() {
 	console.log("======================================================");
 	console.log("=====================BATAILLE=========================");
 	console.log("======================================================");
-    var bataille = new Bataille("batailleToken", {deckSize: 32, maxRounds: 10});
+    var bataille = new Bataille("batailleToken", {deckSize: 32, maxRounds: 50});
 	
     var player1 = bataille.join("foo");
     var player2 = bataille.join("bar");
@@ -39,7 +39,9 @@ test('test Bataille', function() {
     });
     
     bataille.on("bataille", function(winners){
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~BATAILLE!~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        console.log("~~~~~~~~~~~~~~~~~~~~~~ BATAILLE! ~~~~~~~~~~~~~~~~~~~~~~~");
+        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     });
     
     bataille.on("roundEnded", function(roundNumber, winners) {
