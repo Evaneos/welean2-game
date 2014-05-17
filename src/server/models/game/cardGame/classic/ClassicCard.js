@@ -1,27 +1,47 @@
+// Used in front too
 var Card = require('../Card');
 
 var ClassicCard = Card.extend();
 module.exports = ClassicCard;
 
-ClassicCard.defineProperty("colors", { HEARTS : 'Hearts', DIAMONDS : 'Diamonds', CLUBS : 'Clubs', SPADES : 'Spades'});
+ClassicCard.defineProperty("colors", { HEARTS : 'h', DIAMONDS : 'd', CLUBS : 'c', SPADES : 's'});
 ClassicCard.defineProperty("colorsValues", Object.keys(ClassicCard.colors).map((v) => ClassicCard.colors[v]));
 
 ClassicCard.defineProperty("values", {
-    ACE:'Ace',
-    TWO:'2',
-    THREE:'3',
-    FOUR:'4',
-    FIVE:'5',
-    SIX:'6',
-    SEVEN:'7',
-    HEIGHT:'8',
-    NINE:'9',
+    ACE:'a',
+    TWO:'02',
+    THREE:'03',
+    FOUR:'04',
+    FIVE:'05',
+    SIX:'06',
+    SEVEN:'07',
+    HEIGHT:'08',
+    NINE:'09',
     TEN:'10',
-    JACK:'Jack',
-    QUEEN:'Queen',
-    KING:'King'
+    JACK:'j',
+    QUEEN:'q',
+    KING:'k'
 });
 ClassicCard.defineProperty("valuesValues", Object.keys(ClassicCard.values).map((v) => ClassicCard.values[v]));
+
+ClassicCard.defineProperty("generateId", function (color, value) { return color + '_' + value; });
+ClassicCard.defineProperty("getIds", function () {
+    if (ClassicCard.ids) {
+        return ClassicCard.ids;
+    }
+
+    var ids = [];
+
+    S.forEach(ClassicCard.colors, (color) => {
+        S.forEach(ClassicCard.values, (value) => {
+            ids.push(ClassicCard.generateId(color, value));
+        });
+    });
+
+    ClassicCard.defineProperty("ids", ids);
+
+    return ids;
+});
 
 ClassicCard.extendPrototype({
     construct(name, value, color) {
