@@ -77,6 +77,10 @@ function main() {
                 u.markAsReady();
             }
         });
+        if (data.started) {
+            welcomeScreen.hide();
+            gameScreen.show();
+        }
     });
 
     socket.on('application:started', function() {
