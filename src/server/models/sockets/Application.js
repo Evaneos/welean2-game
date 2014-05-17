@@ -65,10 +65,10 @@ Application.extendPrototype({
         this._emitToUsers(this.users, event, data);
     },
     emitToUsersExcept(user, event, data) {
-        this._emitToUsers(this.users.filter((u) => u.name !== user.name));
+        this._emitToUsers(this.users.filter((u) => u.name !== user.name), event, data);
     },
     emitToUsersFiltredByNames(names, event, data) {
-        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)));
+        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data);
     },
     _emitToUsers(users, event, data) {
         logger.debug('_emitToUsers (' + users.length + ')' + event + ' ' + require('util').inspect(data));

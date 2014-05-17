@@ -23,9 +23,7 @@ User.extendPrototype({
         this.emitServer('ready');
     },
     _onPlayCard() {
-        logger.log('playCard evnt received');
         var card = this.application.app.playCard(this.user);
-        console.log(card);
         var data = { userName: this.name, cardId: card.id };
         this.application.emitToMainBoards('player:cardPlayed', data);
         this.emitClient('cardPlayed', data);

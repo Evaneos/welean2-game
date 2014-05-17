@@ -74,6 +74,7 @@ function main() {
         log('You won the round !!!');
     });
     socket.on('round:started', function() {
+        log("It's your turn");
         myTurn = true;
     });
 }
