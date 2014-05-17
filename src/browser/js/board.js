@@ -64,6 +64,14 @@ function main() {
         }
     });
 
+    var waitForNextRound = function() {
+        S.forEach(users, (user) => {
+             user.$eltGame.find('.card-container').find('div').remove();
+        });
+
+        socket.emit('board:ready');
+    };
+
     var socket = io.connect('/');
     global.socket = socket;
 
@@ -77,6 +85,10 @@ function main() {
                 u.markAsReady();
             }
         });
+        if (data.started) {
+            welcomeScreen.hide();
+            gameScreen.show();
+        }
     });
 
     socket.on('application:started', function() {
@@ -126,6 +138,7 @@ function main() {
 
     socket.on('round:winner', function(data) {
         log('Winner: ' + data.userName);
+        window.setTimeout(waitForNextRound, 1500);
     });
     socket.on('round:started', function(data) {
         log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));
