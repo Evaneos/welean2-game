@@ -7,8 +7,8 @@ function main() {
         app.run(window.token, window.client, window.name);
     }
     else if (window.client && window.client == 'board' && window.token) {
-        var app = require('./board.js');
-        app.run(window.token, window.client);
+        var appBoard = require('./board.js');
+        appBoard.run(window.token, window.client);
     }
     else {
         console.info("ahahah");

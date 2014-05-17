@@ -8,7 +8,7 @@ body{
     /* http://stackoverflow.com/questions/11589985/webkit-text-aliasing-gets-weird-during-css3-animations */
     -webkit-backface-visibility: hidden;
 
-    background: #466;
+    background: #e9b33e; //#466; #e9b33e, #16c48d, #db3c19, #e62764; #4dc416
     color: #FFF;
 
     margin: 0 auto;
@@ -24,14 +24,16 @@ body{
         /* http://stackoverflow.com/questions/11589985/webkit-text-aliasing-gets-weird-during-css3-animations */
         -webkit-backface-visibility: hidden;
 
-        background: #646;
-        color: #FFF;
-
         margin: 0;
         width: 100%;
         font-size: 100% !important;
     }
 
+}
+
+body.device {
+    background: #646;
+    color: #FFF;
 }
 
 input, textarea{

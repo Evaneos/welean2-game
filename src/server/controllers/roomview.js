@@ -4,7 +4,9 @@ module.exports = function(req, res) {
 
     var token = req.param('token');
     var app = token2app[token];
-    console.info("roomview", app);
+    if (!app) {
+        return res.redirect('/');
+    }
 
     res.render(app.self.gameKey + '/roomboard/index', { token : token });
 };

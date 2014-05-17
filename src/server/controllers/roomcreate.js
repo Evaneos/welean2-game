@@ -25,5 +25,5 @@ module.exports = function(req, res) {
 
     token2app[token] = app;
 
-    res.render(gameKey + '/roomboard/index', { token : token });
+    res.redirect('/board/' + token);//render(gameKey + '/roomboard/index', { token : token });
 };
