@@ -31,7 +31,7 @@ User.extendPrototype({
     },
     delete() {
         this.$eltList.fadeOut(1000, function() { $(this).remove(); });
-        this.$eltGame.delete();
+        this.$eltGame.remove();
 
         delete this.$eltList;
         delete this.$eltGame;
