@@ -39,7 +39,7 @@ Application.extendPrototype({
             this.emitToUsersExcept(winner.name, 'round:lost', (user) => {
                 return { hand: user.user.hand.length };
             });
-            this._emitToUser(this.usersMap[winner.name], 'round:won');
+            this.emitToUser(winner.name, 'round:won');
             this.emitToMainBoards('round:winner', { userName: winner.name });
         });
 
@@ -56,7 +56,7 @@ Application.extendPrototype({
                     }
                 });
             });
-            this.emitToMainBoards('round:started', { roundNumber: roundNumber, playersNames: names });
+            this.emitToMainBoards('round:started', { roundNumber: roundNumber, userNames: names });
         });
         app.on('bataille', (filteredWinners) => {
             var names = filteredWinners.map((u) => u.name);
@@ -65,10 +65,12 @@ Application.extendPrototype({
                 return { hand: user.user.hand.length };
             });
             this.emitToUsersFiltredByNames(names, 'bataille');
-            this.emitToMainBoards('round:bataille', { playersNames: names });
+            this.emitToMainBoards('round:bataille', { userNames: names });
         });
-        app.on('gameWinner', (winners) => {
-
+        app.on('gameWinner', (winner) => {
+            this.emitToUsersExcept(winner.name, 'game:lost');
+            this.emitToUser(winner.name, 'game:won');
+            this.emitToMainBoards('game:winner', { userName: winner.name });
         });
     },
 
@@ -91,6 +93,9 @@ Application.extendPrototype({
     },
     emitToUsersFiltredByNames(names, event, data) {
         this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data);
+    },
+    emitToUser(name, event, data) {
+        this._emitToUser(this.usersMap[name], event, data);
     },
     _emitToUsers(users, event, data) {
         logger.debug('_emitToUsers (' + users.length + ')' + event + ' ' + require('util').inspect(data));
@@ -129,6 +134,7 @@ Application.extendPrototype({
     addMainboard(socket) {
         logger.debug('add mainboard');
         this.mainboards.push(socket);
+        this.clearDeleteTimeout();
     },
     removeMainboard(mainboard) {
         logger.debug('remove mainboard');
@@ -139,6 +145,9 @@ Application.extendPrototype({
         mainboard.removeAllListeners();
         // This should be paused, but the fonctionnality is not yet implemented
         //this.app.pause();
+        if (this.mainboards.length === 0 && this.users.length === 0) {
+            this.delete();
+        }
     },
     createUser(socketUser, name) {
         logger.debug('add user');
@@ -147,6 +156,7 @@ Application.extendPrototype({
         this.emitToMainBoards('player:connected', name);
         this.emitToUsers('player:connected', name);
         this.users.push(socketUser);
+        this.clearDeleteTimeout();
         return user;
     },
     removeUser(user) {
@@ -163,6 +173,7 @@ Application.extendPrototype({
                 this.app.end();
             }
         }
+        this.deleteIfEmpty();
     },
     userEvent(user, event, data) {
         console.log('userEvent', user.name, event, data);
@@ -177,5 +188,19 @@ Application.extendPrototype({
         logger.debug('delete app ' + this.token);
         delete applicationsMap[this.token];
         this.app.delete();
+    },
+    deleteIfEmpty() {
+        if (this.mainboards.length === 0 && this.users.length === 0) {
+            this.delete();
+        }
+    },
+    deleteMaybeLater() {
+        this.timeoutIdDelete = setTimeout(this.deleteIfEmpty.bind(this), 10000);
+    },
+    clearDeleteTimeout() {
+        if (this.timeoutIdDelete) {
+            clearTimeout(this.timeoutIdDelete);
+            this.timeoutIdDelete = null;
+        }
     }
 });

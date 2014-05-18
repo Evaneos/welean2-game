@@ -3,7 +3,13 @@ document.addEventListener( "DOMContentLoaded", main, false );
 
 var userList = require('./board/userList');
 var User = require('./board/User');
+
+var Popup = require('./Popup');
+
+
+
 function main() {
+    var popup = new Popup();
     try {
         userList.init();
     var token = window.token, client = window.client;
@@ -82,11 +88,14 @@ function main() {
 
     socket.on('round:winner', (data) => {
         log('Winner: ' + data.userName);
+        setTimeout(() => {
+            popup.display('Winner: ' + data.userName);
+        }, 1200);
     });
 
 
     socket.on('round:started', (data) => {
-        log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));
+        log('Round #' + data.roundNumber + ' avec les joueurs ' + data.userNames.join(', '));
     });
 
     // hack
@@ -111,16 +120,22 @@ function main() {
 
     socket.on('round:bataille', (data) => {
         isRoundCurrentlyBataille = true;
-        log('Bataille entre les joueurs ' + data.playersNames.join(', '));
+        log('Bataille entre les joueurs ' + data.userNames.join(', '));
+
 
         setTimeout(() => {
-            data.playersNames.forEach((name) => {
+            popup.display('Bataille !');
+            data.userNames.forEach((name) => {
                 var user = userList.getConnected(name);
                 user.setCard();
             });
         }, 1500);
     });
 
+    socket.on('game:winner', (data) => {
+        log('Game winner: ' + data.userName);
+        popup.display('Gagnant : ' + data.userName);
+    });
 
     }catch(err) {
         console.error(err);

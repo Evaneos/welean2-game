@@ -7,7 +7,10 @@ var vibrate = function(arg) {
     }
 };
 
+var Popup = require('./Popup');
+
 function main() {
+    var popup = new Popup();
     var token = window.token, client = window.client, name = window.name;
     console.log('DEVICE');
     var socket = io.connect('/');
@@ -95,6 +98,7 @@ function main() {
     socket.on('bataille', function(data) {
         log('bataille !!!');
         vibrate([100]);
+        popup.display('Bataille !');
     });
 
     socket.on('round:lost', function() {
@@ -106,5 +110,6 @@ function main() {
     socket.on('round:started', function() {
         log("It's your turn");
         myTurn = true;
+        popup.display('A ton tour');
     });
 }

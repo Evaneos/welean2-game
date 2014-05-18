@@ -56,17 +56,22 @@ User.extendPrototype({
         this.$ready = $('<span> ✔</span>').appendTo(this.$eltList).fadeIn().fadeOut().fadeIn();
     },
     setCard(cardId) {
-        this.removeCard();
+        var $oldCard = this.$card || false;
         var $card = $(generateCard(cardId));
         this.$card = $card;
         $card.css('top', '1000px');
         this.$eltGame.find('.card-container').append($card);
-        $card.animate({'top': '0'}, 1000);
+        $card.animate({'top': '0'}, 1000, () => {
+            this.removeCard($oldCard);
+        });
     },
-    removeCard() {
-        if (this.$card) {
-            this.$card.fadeOut(function() {$(this).remove(); });
-            delete this.$card;
+    removeCard($card) {
+        var $cardToRemove = $card !== undefined ? $card : this.$card;
+        if ($cardToRemove) {
+            $cardToRemove.fadeOut(function() {$(this).remove(); });
+            if (!$card) {
+                delete this.$card;
+            }
         }
     }
 });
