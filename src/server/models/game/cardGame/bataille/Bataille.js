@@ -25,7 +25,7 @@ Bataille.extendPrototype({
         this.startRound();
     },
     cardPlayed(card) {
-        this.currentCards.push(card);
+        Bataille.super_.cardPlayed.call(this, card);
         this.toWin.push(card);
     },
     winningCards(cards) {
@@ -74,7 +74,7 @@ Bataille.extendPrototype({
                 beats[ClassicCard.values.QUEEN] = [ClassicCard.values.JACK];
                 beats[ClassicCard.values.JACK] = [];
                 
-                return (S.array.has(beats[other.value], reference.value))?1:-1;
+                return (S.array.has(beats[other.value], reference.value)) ? 1 : -1;
             }
         }
     },
@@ -84,7 +84,7 @@ Bataille.extendPrototype({
     },
     resolveTieRound(winners) {
         var filteredWinners = [];
-        winners.forEach((player)=>{
+        winners.forEach((player) => {
             if (this.checkLoser(player) === false) {
                 filteredWinners.push(player);
             }
