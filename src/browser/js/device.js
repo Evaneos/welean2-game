@@ -19,7 +19,7 @@ function main() {
     });
 
     var gameScreen = $('.game');
-    var mydeck = gameScreen.find('.card-container');
+    var mydeck = gameScreen.find('.my-deck');
     var logList = gameScreen.find('.log');
     var rightside = logList.parent();
 
@@ -67,6 +67,10 @@ function main() {
     });
 
     socket.on('application:started', function(username) {
+        log("Start");
+        if (window.navigator.vibrate) {
+            window.navigator.vibrate([30, 30, 30]);
+        }
         welcomeScreen.hide();
         gameScreen.show();
         myTurn = true;
@@ -90,6 +94,9 @@ function main() {
         log('You won the round !!!');
     });
     socket.on('round:started', function() {
+        if (window.navigator.vibrate) {
+            window.navigator.vibrate([100,30]);
+        }
         log("It's your turn");
         myTurn = true;
     });
