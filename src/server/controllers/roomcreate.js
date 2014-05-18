@@ -21,7 +21,7 @@ module.exports = function(req, res) {
     }
 
     // Create an Application with a Room, ready to receive sockets
-    var app = new ApplicationFactory().get(gameKey, req.query);
+    var app = new ApplicationFactory().get(gameKey, token, req.query);
 
     token2app[token] = app;
 

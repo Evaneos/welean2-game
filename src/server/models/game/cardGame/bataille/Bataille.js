@@ -13,7 +13,7 @@ Bataille.extendPrototype({
         this.deckSize = options.deckSize || 52;
         this.toWin = [];
         
-        Bataille.superConstruct.call(this, token, 4, 2, (options.maxRounds || 50));
+        Bataille.superConstruct.call(this, token, { usersMin: 2, usersMax: 4, maxRounds: options.maxRounds});
     },
     buildDeck() {
         this.deck = new ClassicDeck(this.deckSize);

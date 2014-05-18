@@ -6,10 +6,10 @@ var CardGame = Application.extend();
 module.exports = CardGame;
 
 CardGame.extendPrototype({
-    construct(token, usersMax, usersMin, maxRounds=50) {
+    construct(token, options = {}) {
         CardGame.superConstruct.apply(this, arguments);
 
-        this.maxRounds = maxRounds;
+        this.maxRounds = options.maxRounds || 50;
         this.reset();
 
         this.room.on("userAdded", (player) => {

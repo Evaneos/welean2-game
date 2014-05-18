@@ -5,9 +5,9 @@ var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
 
 Application.extendPrototype({
-    construct(token, usersMax, usersMin) {
+    construct(token, options = {}) {
         this.token = token;
-        this.room = new Room(token, usersMax, usersMin);
+        this.room = new Room(token, options.usersMax, options.usersMin);
         this.started  = false;
     },
     start() {

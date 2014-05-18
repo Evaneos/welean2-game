@@ -6,6 +6,7 @@ module.exports = ClassicDeck;
 
 ClassicDeck.extendPrototype({
     construct(number=52) {
+        number = Number(number);
         console.log("Retrieving classic deck of "+number+" cards.");
         if(number !== 52 && number !== 32) {
             throw new Error("deck.impossible.52or32cards");
