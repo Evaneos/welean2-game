@@ -1,5 +1,12 @@
 var User = S.newClass();
 module.exports = User;
+
+
+var generateCard = function(id) {
+    var cssClass = 'sprite-deck-' + (id || 'backside');
+    return '<div class="icon-big ' + cssClass + '"></div>';
+};
+
 User.extendPrototype({
     construct(name) {
         this.name = name;
@@ -47,5 +54,19 @@ User.extendPrototype({
     markAsReady() {
         this.ready = true;
         this.$ready = $('<span> ✔</span>').appendTo(this.$eltList).fadeIn().fadeOut().fadeIn();
+    },
+    setCard(cardId) {
+        this.removeCard();
+        var $card = $(generateCard(cardId));
+        this.$card = $card;
+        $card.css('top', '1000px');
+        this.$eltGame.find('.card-container').append($card);
+        $card.animate({'top': '0'}, 1000);
+    },
+    removeCard() {
+        if (this.$card) {
+            this.$card.fadeOut(function() {$(this).remove(); });
+            delete this.$card;
+        }
     }
 });

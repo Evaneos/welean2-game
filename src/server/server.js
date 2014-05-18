@@ -35,6 +35,18 @@ app.set('views', __dirname + '/views');
 app.use(cookieParser(argv.production ? generator.randomCode(12) : undefined));
 app.use(bodyParser.urlencoded());
 
+if (!argv.production) {
+    console.log('Dev mode');
+    app.use(require('connect-livereload')({
+        port: argv.livereloadPort
+    }));
+    ['src', 'node_modules'].forEach((folder) => {
+        app.use('/' + folder, express.static(path.normalize(__dirname +'/../../' + folder)));
+    });
+} else {
+    console.log('Production mode');
+}
+
 var router = require('./router.js');
 router.app = app;
 router.load(require('./config/route.js'));
@@ -66,17 +78,6 @@ require('./socket')(server, argv, function(io) {
     });
 });
 
-if (!argv.production) {
-    console.log('Dev mode');
-    app.use(require('connect-livereload')({
-        port: argv.livereloadPort
-    }));
-    ['src', 'node_modules'].forEach((folder) => {
-        app.use('/' + folder, express.static(path.normalize(__dirname +'/../../' + folder)));
-    });
-} else {
-    console.log('Production mode');
-}
 
 app.use(express.static(__dirname +'/../../public'));
 

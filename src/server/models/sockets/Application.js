@@ -36,13 +36,15 @@ Application.extendPrototype({
             });
         });
         app.on('roundWinner', (winner) => {
-            setTimeout(() => {
-                this.emitToUsersExcept(winner, 'round:lost', (u) => {
-                    return { hand: u.user.hand.length };
-                });
-                this._emitToUser(this.usersMap[winner.name], 'round:won');
-                this.emitToMainBoards('round:winner', { userName: winner.name });
-            },1);
+            this.emitToUsersExcept(winner.name, 'round:lost', (user) => {
+                return { hand: user.user.hand.length };
+            });
+            this._emitToUser(this.usersMap[winner.name], 'round:won');
+            this.emitToMainBoards('round:winner', { userName: winner.name });
+        });
+
+        app.on('roundEnded', () => {
+            this.emitToMainBoards('round:ended', {});
         });
 
         app.on('roundStarted', (roundNumber, players) => {
@@ -56,9 +58,17 @@ Application.extendPrototype({
             });
             this.emitToMainBoards('round:started', { roundNumber: roundNumber, playersNames: names });
         });
-        app.on('gameWinner', (winners) => {
-            setTimeout(() => {
+        app.on('bataille', (filteredWinners) => {
+            var names = filteredWinners.map((u) => u.name);
+
+            this.emitToUsersExcept(names, 'round:lost', (user) => {
+                return { hand: user.user.hand.length };
             });
+            this.emitToUsersFiltredByNames(names, 'bataille');
+            this.emitToMainBoards('round:bataille', { playersNames: names });
+        });
+        app.on('gameWinner', (winners) => {
+
         });
     },
 
@@ -73,12 +83,14 @@ Application.extendPrototype({
     emitToUsers(event, data) {
         this._emitToUsers(this.users, event, data);
     },
-    emitToUsersExcept(user, event, data) {
-        this._emitToUsers(this.users.filter((u) => u.name !== user.name), event, data);
+    emitToUsersExcept(names, event, data) {
+        if (!S.isArray(names)) {
+            names = [names];
+        }
+        this._emitToUsers(this.users.filter((u) => !S.array.has(names, u.name)), event, data);
     },
     emitToUsersFiltredByNames(names, event, data) {
-        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data
-            );
+        this._emitToUsers(this.users.filter((u) => S.array.has(names, u.name)), event, data);
     },
     _emitToUsers(users, event, data) {
         logger.debug('_emitToUsers (' + users.length + ')' + event + ' ' + require('util').inspect(data));
@@ -87,6 +99,9 @@ Application.extendPrototype({
         });
     },
     _emitToUser(user, event, data) {
+        if (!user.user) {
+            throw new Error();
+        }
         var userData = data;
         if (S.isFunction(userData)) {
             userData = userData(user);
@@ -128,10 +143,10 @@ Application.extendPrototype({
     createUser(socketUser, name) {
         logger.debug('add user');
         var user = this.app.join(name);
-        this.users.push(socketUser);
         this.usersMap[name] = socketUser;
         this.emitToMainBoards('player:connected', name);
         this.emitToUsers('player:connected', name);
+        this.users.push(socketUser);
         return user;
     },
     removeUser(user) {

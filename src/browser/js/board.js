@@ -27,15 +27,6 @@ function main() {
         logListParent.prop('scrollTop', logListParent.prop('scrollHeight'));
     };
 
-
-    var waitForNextRound = function() {
-        userList.forEach((user) => {
-             user.$eltGame.find('.card-container').find('div').remove();
-        });
-
-        socket.emit('board:ready');
-    };
-
     var socket = io.connect('/');
     global.socket = socket;
 
@@ -53,66 +44,83 @@ function main() {
         }
     });
 
-    socket.on('application:started', function() {
+    socket.on('application:started', () => {
         log('Le jeu commence !');
         welcomeScreen.hide();
         gameScreen.show();
     });
-    socket.on('application:ended', function() {
+    socket.on('application:ended', () => {
         log('Le jeu est terminé. Prêt pour une nouvelle partie ?');
         gameScreen.hide();
         welcomeScreen.show();
         userList.resetAll();
     });
 
-    socket.on('player:connected', function(name) {
+    socket.on('player:connected', (name) => {
         log('Le joueur "' + name + '" nous a rejoint');
         userList.getOrCreate(name);
     });
-    socket.on('player:disconnected', function(name) {
+    socket.on('player:disconnected', (name) => {
         log('Le joueur "' + name + '" nous a quitté');
         userList.disconnect(name);
     });
-    socket.on('player:left', function(name) {
+    socket.on('player:left', (name) => {
         log('Le joueur "' + name + '" nous a quitté');
         userList.delete(name);
     });
-    socket.on('player:ready', function(name) {
+    socket.on('player:ready', (name) => {
         log('Le joueur "' + name + '" est prêt !');
         userList.markUserAsReady(name);
     });
-    socket.on('player:cardPlayed', function(data) {
+    socket.on('player:cardPlayed', (data) => {
         log('Le joueur "' + data.userName + '" a joué la carte ' + data.cardId);
         var user = userList.getConnected(data.userName);
         if (user) {
-            var card = $(generateCard(data.cardId));
-
-            card.css({
-                'top': '1000px'
-            });
-            user.$eltGame.find('.card-container').append(card);
-            card.animate(
-                {
-                    'top': '0'
-                },
-                1000
-            );
+            user.setCard(data.cardId);
         }
     });
 
-    socket.on('round:winner', function(data) {
+    socket.on('round:winner', (data) => {
         log('Winner: ' + data.userName);
-        window.setTimeout(waitForNextRound, 2000);
     });
-    socket.on('round:started', function(data) {
+
+
+    socket.on('round:started', (data) => {
         log('Round #' + data.roundNumber + ' avec les joueurs ' + data.playersNames.join(', '));
     });
 
+    // hack
+    var isRoundCurrentlyBataille = false;
 
-    var generateCard = function(id, face = true) {
-        var cssClass = 'sprite-deck-' + (face ? id : 'backside');
-        return '<div class="icon-big ' + cssClass + '"></div>';
-    };
+    socket.on('round:ended', (data) => {
+        isRoundCurrentlyBataille = false;
+        log('Find du round');
+        setTimeout(() => {
+            if (!isRoundCurrentlyBataille) {
+                userList.forEach((user) => {
+                    user.removeCard();
+                });
+                socket.emit('board:ready');
+            } else {
+                setTimeout(() => {
+                    socket.emit('board:ready');
+                }, 2000);
+            }
+        }, 2000);
+    });
+
+    socket.on('round:bataille', (data) => {
+        isRoundCurrentlyBataille = true;
+        log('Bataille entre les joueurs ' + data.playersNames.join(', '));
+
+        setTimeout(() => {
+            data.playersNames.forEach((name) => {
+                var user = userList.getConnected(name);
+                user.setCard();
+            });
+        }, 1500);
+    });
+
 
     }catch(err) {
         console.error(err);

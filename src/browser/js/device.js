@@ -1,6 +1,12 @@
 global.S = require('springbokjs-utils');
 document.addEventListener( "DOMContentLoaded", main, false );
 
+var vibrate = function(arg) {
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate(arg);
+    }
+};
+
 function main() {
     var token = window.token, client = window.client, name = window.name;
     console.log('DEVICE');
@@ -25,16 +31,14 @@ function main() {
 
     var log = function(message) {
         logList.append($('<li>').text(message));
+        rightside.prop('scrollTop', rightside.prop('scrollHeight'));
     };
 
     var myTurn = false;
     mydeck.on('touchstart', function() {
-        log('You started touching your deck');
-        rightside.prop('scrollTop', rightside.prop('scrollHeight'));
+        
     });
     mydeck.on('touchend', function() {
-        log('You stopped touching your deck');
-        rightside.prop('scrollTop', rightside.prop('scrollHeight'));
         if (myTurn) {
             log('You played a card');
 
@@ -65,12 +69,14 @@ function main() {
     socket.on('player:disconnected', function(username) {
         console.log('player:disconnected', username);
     });
+    socket.on('player:left', function(username) {
+        console.log('player:left', username);
+    });
+
 
     socket.on('application:started', function(username) {
         log("Start");
-        if (window.navigator.vibrate) {
-            window.navigator.vibrate([30, 30, 30]);
-        }
+        vibrate([30, 30, 30]);
         welcomeScreen.hide();
         gameScreen.show();
         myTurn = true;
@@ -86,6 +92,10 @@ function main() {
     socket.on('cardPlayed', function(data) {
         log('cardPlayed' + data.cardId);
     });
+    socket.on('bataille', function(data) {
+        log('bataille !!!');
+        vibrate([100]);
+    });
 
     socket.on('round:lost', function() {
         log('You lost the round :( Maybe the next one :)');
@@ -94,9 +104,6 @@ function main() {
         log('You won the round !!!');
     });
     socket.on('round:started', function() {
-        if (window.navigator.vibrate) {
-            window.navigator.vibrate([100,30]);
-        }
         log("It's your turn");
         myTurn = true;
     });
