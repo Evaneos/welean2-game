@@ -42,7 +42,7 @@ router.load(require('./config/route.js'));
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket')(server, function(io) {
+require('./socket')(server, argv, function(io) {
     io.sockets.on('connection', function(socket) {
         socket.on('connect', console.log.bind(console, 'connect'));
         socket.on('connection', console.log.bind(console, 'connection'));
