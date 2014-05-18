@@ -150,13 +150,13 @@ Application.extendPrototype({
         }
     },
     userEvent(user, event, data) {
+        console.log('userEvent', user.name, event, data);
+        this.emitToMainBoards('player:' + event, user.name);
         if (event === 'ready') {
             if (!this.users.some((u) => !u.isReady())) {
                 this.app.tryToStart();
             }
         }
-        console.log('userEvent', user.name, event, data);
-        this.emit('player:' + event, user.name);
     },
     delete() {
         logger.debug('delete app ' + this.token);

@@ -19,6 +19,7 @@ User.extendPrototype({
         this.application.removeUser(this);
     },
     _onReady() {
+        logger.log('user ready:' + this.name);
         this.user.markAsReady();
         this.emitServer('ready');
     },

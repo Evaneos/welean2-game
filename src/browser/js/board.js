@@ -1,6 +1,8 @@
 global.S = require('springbokjs-utils');
 document.addEventListener( "DOMContentLoaded", main, false );
 
+var userList = require('./board/userList');
+var User = require('./board/User');
 function main() {
     try {
     var token = window.token, client = window.client;
@@ -8,9 +10,13 @@ function main() {
 
     var welcomeScreen = $('.welcome');
     var gameScreen = $('.game');
+    var usersList = $('#list-users');
     var cardsContainer = gameScreen.find('.cards');
 
-    var usersList = $('#list-users');
+    User.usersList = usersList;
+    User.cardsContainer = cardsContainer;
+
+
     var logList = $('#log'), logListParent = logList.parent();
 
     var log = function(message) {
@@ -20,52 +26,9 @@ function main() {
         logListParent.prop('scrollTop', logListParent.prop('scrollHeight'));
     };
 
-    var users = {};
-    var usersCount = 0;
-    var usersReady = 0;
-    var User = S.newClass({
-        construct(name) {
-            this.name = name;
-            this.$eltList = $('<li/>').text(name);
-            this.$eltGame = $('<div class="user"><div class="card-container"></div><div class="name"></div></div>');
-            usersList.append(this.$eltList);
-            cardsContainer.append(this.$eltGame);
-            usersCount++;
-            $('.playersCount').text(usersCount);
-            this.$eltGame.find('.name').text(name);
-        },
-        remove() {
-            this.$eltList.css('text-decoration', 'line-through').fadeOut(1000, function() { $(this).remove(); });
-            delete this.$eltList;
-            delete this.$eltGame;
-            delete users[this.name];
-            usersCount--;
-            $('.playersCount').text(usersCount);
-            if (this.ready) {
-                usersReady--;
-                $('.playersReadyCount').text(usersReady);
-            }
-        },
-        reset() {
-            this.ready = false;
-            if (this.$ready) {
-                this.$ready.remove();
-            }
-        },
-        markAsReady() {
-            this.ready = true;
-            this.$ready = $('<span> ✔</span>').appendTo(this.$eltList).fadeIn().fadeOut().fadeIn();
-            usersReady++;
-            $('.playersReadyCount').text(usersReady);
-            /*The server should be the one to starts the game
-            if (usersReady === usersCount) {
-                appReady();
-            }*/
-        }
-    });
 
     var waitForNextRound = function() {
-        S.forEach(users, (user) => {
+        userList.forEach((user) => {
              user.$eltGame.find('.card-container').find('div').remove();
         });
 
@@ -80,14 +43,12 @@ function main() {
 
     socket.on('initialData', (data) => {
         data.users.forEach((user) => {
-            var u = users[name] = new User(user.name);
-            if (user.ready) {
-                u.markAsReady();
-            }
+            userList.getOrCreate(user.name, user.ready);
         });
         if (data.started) {
             welcomeScreen.hide();
             gameScreen.show();
+            // TODO: state of the board: with cards
         }
     });
 
@@ -98,38 +59,32 @@ function main() {
     });
     socket.on('application:ended', function() {
         log('Le jeu est terminé. Prêt pour une nouvelle partie ?');
-        usersReady = 0;
-        $('.playersReadyCount').text(usersReady);
         gameScreen.hide();
         welcomeScreen.show();
-        S.forEach(users, (u) => u.reset());
+        userList.resetAll();
     });
 
     socket.on('player:connected', function(name) {
         log('Le joueur "' + name + '" nous a rejoint');
-        if (users[name]) {
-            users[name].delete();
-        }
-        users[name] = new User(name);
+        userList.getOrCreate(name);
     });
     socket.on('player:disconnected', function(name) {
         log('Le joueur "' + name + '" nous a quitté');
-        if (users[name]) {
-            users[name].remove();
-        }
+        userList.disconnect(name);
+    });
+    socket.on('player:left', function(name) {
+        log('Le joueur "' + name + '" nous a quitté');
+        userList.delete(name);
     });
     socket.on('player:ready', function(name) {
         log('Le joueur "' + name + '" est prêt !');
-        if (users[name]) {
-            users[name].markAsReady();
-        }
+        userList.markUserAsReady(name);
     });
     socket.on('player:cardPlayed', function(data) {
         log('Le joueur "' + data.userName + '" a joué la carte ' + data.cardId);
-        if (users[data.userName]) {
-            var user = users[data.userName],
-                card = $(generateCard(data.cardId))
-            ;
+        var user = userList.getConnected(data.userName);
+        if (user) {
+            var card = $(generateCard(data.cardId));
 
             card.css({
                 'top': '1000px'
@@ -142,9 +97,6 @@ function main() {
                 1000
             );
         }
-    });
-    socket.on('player:roundWinner', function(data) {
-        log('Le joueur "' + data.userName + '" a gagné ce tour !');
     });
 
     socket.on('round:winner', function(data) {
