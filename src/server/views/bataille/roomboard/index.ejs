@@ -11,6 +11,10 @@
         <![endif]-->
         <script type="text/javascript" src="<%= basepath %>socket.io/socket.io.js"></script>
         <script type="text/javascript" src="<%= basepath %>dist/board.js"></script>
+        <script type="text/javascript" src="http://davidshimjs.github.io/qrcodejs/qrcode.min.js"></script>
+        <script type="text/javascript">
+        	var playUrl = "http://<%= domainName %>/play/<%= token %>";
+        </script>
     </head>
     <body class="board">
         <div class="container">
@@ -26,7 +30,9 @@
             <div class="welcome">
                 <h1>Bienvenue au jeu de bataille !</h1>
                 <h2>Connectez-vous dès maintenant avec l'url <a href="/play/<%= token %>">http://<%= domainName %>/play/<%= token %></a></h2>
-                <div id="qrcode"></div>
+                <div class="qrContainer">
+                	<div id="qrcode"></div>
+                </div>
                 <div class="infos">
                     <span class="playersCount">0</span> joueurs<span class="infosPlayersReady"> dont <span class="playersReadyCount">0</span> prêts</span>
                 </div>
@@ -43,6 +49,6 @@
         token = "<%= token %>";
 
         // Generate qrcode
-        $('#qrcode').qrcode({width: 128,height: 128,text: "http://<%= domainName %>/play/<%= token %>"});
+        new QRCode(document.getElementById("qrcode"), {text: playUrl, width: 250, height: 250});
     </script>
 </html>
