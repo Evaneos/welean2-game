@@ -1,11 +1,14 @@
-var playersCount = $('.playersCount');
-var playersReadyCount = $('.playersReadyCount');
 var User = require('./User');
 
 module.exports = {
     usersCount: 0,
     usersReady: 0,
     users: {},
+
+    init() {
+        this.$playersCount = $('.playersCount');
+        this.$playersReadyCount = $('.playersReadyCount');
+    },
 
     forEach(callback) {
         S.forEach(this.users, callback);
@@ -19,7 +22,7 @@ module.exports = {
         user = new User(name);
         this.users[name] = user;
         this.usersCount++;
-        playersCount.text(this.usersCount);
+        this.$playersCount.text(this.usersCount);
         if (ready) {
             this.markUserAsReady(user.name);
         }
@@ -49,26 +52,26 @@ module.exports = {
         if (user) {
             if (user.ready) {
                 this.usersReady--;
-                playersReadyCount.text(this.usersReady);
+                this.$playersReadyCount.text(this.usersReady);
             }
             user.delete();
 
             this.usersCount--;
-            playersCount.text(this.usersCount);
+            this.$playersCount.text(this.usersCount);
             delete this.users[name];
         }
     },
     resetAll() {
         S.forEach(this.users, (u) => u.reset());
         this.usersReady = 0;
-        playersReadyCount.text(this.usersReady);
+        this.$playersReadyCount.text(this.usersReady);
     },
     markUserAsReady(name) {
         var user = this.getConnected(name);
         if (user) {
             user.markAsReady();
             this.usersReady++;
-            playersReadyCount.text(this.usersReady);
+            this.$playersReadyCount.text(this.usersReady);
         }
     },
 };

@@ -13,5 +13,8 @@ clean:
 	rm -Rf public/images/*
 	gulp springbokjs-shim
 
+build:
+	gulp
+
 watch:
-	gulp  watch
+	gulp watch

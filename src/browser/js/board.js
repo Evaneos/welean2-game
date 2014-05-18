@@ -5,6 +5,7 @@ var userList = require('./board/userList');
 var User = require('./board/User');
 function main() {
     try {
+        userList.init();
     var token = window.token, client = window.client;
     console.log('BOARD');
 
