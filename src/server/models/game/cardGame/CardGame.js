@@ -17,9 +17,6 @@ CardGame.extendPrototype({
                 this.played.add(player);
                 if (this.played.size == this.playersForRound.length) {
                     this.emit("allPlayersPlayed");
-                    setTimeout(() => { //delay round resolution: we need to inform the card played to the board before !
-                        this.endRound();
-                    });
                 }
             });
         });
@@ -141,11 +138,14 @@ CardGame.extendPrototype({
             }
         });
         
+        var result = null;
         if(this.roundNumber < this.maxRounds && countActivePlayers>1) {
-            setTimeout(this.startRound.bind(this));
+            result = this.startRound;
         } else {
-            this.end();
+            result = this.end;
         }
+        
+        this.emit("roundFinalized", result.bind(this));
     },
     endRound() {
         

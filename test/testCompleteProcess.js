@@ -31,6 +31,7 @@ test('test Bataille', function() {
     bataille.on("roundStarted", function(roundNumber, players){
         i++;
         console.log("======== ROUND "+roundNumber+" STARTED ("+players.length+" players) =======");
+        bataille.cheat(player1);
         bataille.playCard(player1);
         bataille.playCard(player2);
         if (i==20) {
@@ -49,6 +50,14 @@ test('test Bataille', function() {
         console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         console.log("~~~~~~~~~~~~~~~~~~~~~~ BATAILLE! ~~~~~~~~~~~~~~~~~~~~~~~");
         console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    });
+    
+    bataille.on("allPlayersPlayed", function() {
+        bataille.endRound();
+    });
+    
+    bataille.on("roundFinalized", function(fn) {
+        fn();
     });
     
     bataille.on("roundEnded", function(roundNumber, winners) {

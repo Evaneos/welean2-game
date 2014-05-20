@@ -115,5 +115,36 @@ Bataille.extendPrototype({
             }
         });
         this.emit("gameWinner", winner);
+    },
+    cheat(cheater) {
+        
+        var bestPlayer = cheater;
+        var cheaterCard = S.array.last(cheater.hand);
+        console.log("++++++++++"+cheaterCard.name+"++++++++++++");
+        var bestCard = cheaterCard;
+        
+        S.forEach(this.room.users, (player) => {
+            if(player !== cheater && this.played.has(player) === false && player.hand.length > 0) {
+                var firstCard = S.array.last(player.hand);
+                console.log("++++++++++"+firstCard.name+"++++++++++++");
+                if (this.compareCards(bestCard, firstCard)>0) {
+                    bestCard = firstCard;
+                    bestPlayer = player;
+                }
+            }
+        });
+        
+        if (bestCard !== cheaterCard) {
+            bestCard = bestPlayer.hand.pop();
+            cheaterCard = cheater.hand.pop();
+            cheater.hand.push(bestCard);
+            bestPlayer.hand.push(cheaterCard);
+            
+            console.log(
+                "Switched cards : "+bestCard.name+"("+bestPlayer.name+") / "+
+                cheaterCard.name+"("+cheater.name+")"
+            );
+        } 
+        
     }
 });
