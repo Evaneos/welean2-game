@@ -10,7 +10,7 @@ var Card = require('../lib/server/models/game/cardGame/Card');
 var Deck = require('../lib/server/models/game/cardGame/Deck');
 
 test('test CardGame', function() {
-	var cardGame = new CardGame("cardToken", 5, 2);
+	var cardGame = new CardGame("cardToken", { usersMax: 5, usersMin: 2 });
 	expect("cardToken", cardGame.token);
     expect("cardToken", cardGame.room.token);
     expect(5, cardGame.room.usersMax);
