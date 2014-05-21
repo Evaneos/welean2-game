@@ -39,12 +39,18 @@ Application.extendPrototype({
             this.emitToUsersExcept(winner.name, 'round:lost', (user) => {
                 return { hand: user.user.hand.length };
             });
-            this.emitToUser(winner.name, 'round:won');
-            this.emitToMainBoards('round:winner', { userName: winner.name });
+            this.emitToUser(winner.name, 'round:won', { hand: winner.hand.length });
+            this.emitToMainBoards('round:winner', {
+                userName: winner.name
+            });
         });
 
         app.on('roundEnded', () => {
-            this.emitToMainBoards('round:ended', {});
+            this.emitToMainBoards('round:ended', {
+                playersHand: S.map(this.usersMap, (user) => {
+                    return user.user.hand.length;
+                })
+            });
         });
 
         app.on('allPlayersPlayed', () => {
