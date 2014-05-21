@@ -23,11 +23,14 @@ User.extendPrototype({
         this.user.markAsReady();
         this.emitServer('ready');
     },
-    _onPlayCard() {
+    _onPlayCard(data) {
+        if (data && data.cheat) {
+            this.application.app.cheat(this.user);
+        }
         var card = this.application.app.playCard(this.user);
-        var data = { userName: this.name, cardId: card.id };
-        this.application.emitToMainBoards('player:cardPlayed', data);
-        this.emitClient('cardPlayed', data);
+        var emitData = { userName: this.name, cardId: card.id };
+        this.application.emitToMainBoards('player:cardPlayed', emitData);
+        this.emitClient('cardPlayed', emitData);
     },
     isReady() {
         return this.user.ready();
