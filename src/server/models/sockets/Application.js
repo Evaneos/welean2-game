@@ -46,11 +46,6 @@ Application.extendPrototype({
         });
 
         app.on('roundEnded', () => {
-            this.emitToMainBoards('round:ended', {
-                playersHand: S.map(this.usersMap, (user) => {
-                    return user.user.hand.length;
-                })
-            });
         });
 
         app.on('allPlayersPlayed', () => {
@@ -61,6 +56,11 @@ Application.extendPrototype({
 
         app.on('roundFinalized', (fn) => {
             fn();
+            this.emitToMainBoards('round:ended', {
+                playersHand: S.map(this.usersMap, (user) => {
+                    return user.user.hand.length;
+                })
+            });
         });
 
         app.on('roundStarted', (roundNumber, players) => {
