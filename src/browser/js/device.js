@@ -29,6 +29,7 @@ function main() {
 
     var gameScreen = $('.game');
     var mydeck = gameScreen.find('.my-deck');
+    var cheatbtn = gameScreen.find('.cheat-btn');
     var logList = gameScreen.find('.log');
     var rightside = logList.parent();
 
@@ -38,13 +39,20 @@ function main() {
     };
 
     var myTurn = false;
-    mydeck.on('touchstart', function() {
-        
-    });
+    
+    mydeck.on('touchstart', function() {});
     mydeck.on('touchend', play);
     mydeck.on('click', play);
     
-    function play() {
+    cheatbtn.on('click', cheat);
+    
+    function cheat() {
+        play(true);
+    }
+    
+    function play(cheater) {
+        var cheat = cheater | false;
+        
         if (myTurn) {
             log('You played a card');
 
@@ -52,7 +60,7 @@ function main() {
 
             mydeck.after(clone);
 
-            socket.emit('playCard');
+            socket.emit('playCard', {'cheat': cheat});
 
             clone.animate(
                 {
@@ -104,11 +112,17 @@ function main() {
         popup.display('Bataille !');
     });
 
-    socket.on('round:lost', function() {
+    socket.on('round:lost', function(data) {
         log('You lost the round :( Maybe the next one :)');
+        if (data && data.hand) {
+            log('You have '+data.hand+' cards left in your hand.');
+        }
     });
-    socket.on('round:won', function() {
+    socket.on('round:won', function(data) {
         log('You won the round !!!');
+        if (data && data.hand) {
+            log('You have '+data.hand+' cards left in your hand.');
+        }
     });
     socket.on('round:started', function() {
         log("It's your turn");

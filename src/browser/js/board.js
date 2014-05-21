@@ -104,6 +104,11 @@ function main() {
     socket.on('round:ended', (data) => {
         isRoundCurrentlyBataille = false;
         log('Find du round');
+        if (data && data.playersHand) {
+            S.forEach(data.playersHand, (hand, player) => {
+                log(player+' have '+hand+' cards left in his hand.');
+            });
+        }
         setTimeout(() => {
             if (!isRoundCurrentlyBataille) {
                 userList.forEach((user) => {
