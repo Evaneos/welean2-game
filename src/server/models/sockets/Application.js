@@ -2,6 +2,9 @@ var Application = S.extendClass(require('events').EventEmitter);
 module.exports = Application;
 var token2app = require('../../token.js');
 
+var SocketUser = require('./User');
+var SocketMainboard = require('./Mainboard');
+
 var applicationsMap = {};
 
 Application.getOrCreate = function(token) {
@@ -14,6 +17,12 @@ Application.getOrCreate = function(token) {
     }
     return applicationsMap[token] = new Application(app);
 };
+
+Application.defineProperty('states', Object.freeze({
+    STOPPED: 'ended', //welcome screen
+    STARTED: 'started',
+    PAUSED: 'paused',
+}));
 
 Application.extendPrototype({
     construct(app) {
@@ -32,7 +41,7 @@ Application.extendPrototype({
         app.on('ended', () => {
             this.users.forEach((u) => u.markAsIdle());
             process.nextTick(() => {
-                this.emitToAll('application:ended');
+                this.changeState(Application.states.STOPPED);
             });
         });
         app.on('roundWinner', (winner) => {
@@ -46,6 +55,13 @@ Application.extendPrototype({
         });
 
         app.on('roundEnded', () => {
+            setTimeout(() => {
+                this.emitToMainBoards('round:ended', {
+                    playersHand: S.map(this.usersMap, (user) => {
+                        return user.user.hand.length;
+                    })
+                });
+            })
         });
 
         app.on('allPlayersPlayed', () => {
@@ -56,11 +72,6 @@ Application.extendPrototype({
 
         app.on('roundFinalized', (fn) => {
             fn();
-            this.emitToMainBoards('round:ended', {
-                playersHand: S.map(this.usersMap, (user) => {
-                    return user.user.hand.length;
-                })
-            });
         });
 
         app.on('roundStarted', (roundNumber, players) => {
@@ -88,6 +99,24 @@ Application.extendPrototype({
             this.emitToUser(winner.name, 'game:won');
             this.emitToMainBoards('game:winner', { userName: winner.name });
         });
+    },
+
+    changeState(state) {
+        this.state = state;
+        this.emitToAll('application:' + this.state);
+    },
+    isStarted() {
+        return this.state === Application.states.STARTED;
+    },
+    isPaused() {
+        return this.state === Application.states.PAUSED;
+    },
+
+    tryToUnpause() {
+        if (!this.users.some((u) => !u.isConnected())) {
+            this.emitToAll('application:unpaused');
+            this.state = Application.states.STARTED;
+        }
     },
 
     areMainboardsReady() {
@@ -147,10 +176,29 @@ Application.extendPrototype({
         };
     },
 
+    addClient(socket, data) {
+        this.clearDeleteTimeout();
+        if (data.client == 'board') {
+            var mainboard = new SocketMainboard(this, socket, data);
+            this.addMainboard(mainboard);
+        } else if (data.client == 'device') {
+            var existingUser = this.usersMap[data.name];
+            if (existingUser) {
+                console.log(existingUser);
+                if (existingUser.isConnected()) {
+                    throw new Error('User already exists in this game');
+                }
+                existingUser.reconnect(socket);
+            } else {
+                var user = new SocketUser(this, socket, data);
+                this.addUser(user);
+            }
+        }
+    },
+
     addMainboard(socket) {
         logger.debug('add mainboard');
         this.mainboards.push(socket);
-        this.clearDeleteTimeout();
     },
     removeMainboard(mainboard) {
         logger.debug('remove mainboard');
@@ -165,23 +213,22 @@ Application.extendPrototype({
             this.delete();
         }
     },
-    createUser(socketUser, name) {
-        logger.debug('add user');
-        var user = this.app.join(name);
+    addUser(socketUser) {
+        var name = socketUser.name;
+        logger.debug('add user ' + name);
+        socketUser.user = this.app.join(name);
         this.usersMap[name] = socketUser;
         this.emitToMainBoards('player:connected', name);
         this.emitToUsers('player:connected', name);
         this.users.push(socketUser);
-        this.clearDeleteTimeout();
-        return user;
     },
     removeUser(user) {
         logger.debug('remove user');
         S.array.remove(this.users, user);
         delete this.usersMap[user.name];
         this.app.quit(user) ;
-        this.emitToMainBoards('player:disconnected', user.name);
-        this.emitToUsers('player:disconnected', user.name);
+        this.emitToMainBoards('player:left', user.name);
+        this.emitToUsers('player:left', user.name);
         if (this.mainboards.length === 0 && this.users.length === 0) {
             this.delete();
         } else {
@@ -195,9 +242,12 @@ Application.extendPrototype({
         console.log('userEvent', user.name, event, data);
         this.emitToMainBoards('player:' + event, user.name);
         if (event === 'ready') {
-            if (!this.users.some((u) => !u.isReady())) {
+            if (this.users.length >= this.app.room.usersMin && !this.users.some((u) => !u.isReady())) {
+                this.changeState(Application.states.STARTED);
                 this.app.tryToStart();
             }
+        } else if (event === 'disconnected') {
+            this.changeState(Application.states.PAUSED);
         }
     },
     delete() {

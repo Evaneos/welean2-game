@@ -14,7 +14,6 @@ Mainboard.extendPrototype({
         socket.on('board:ready', this._bindedOnMainboardReady = this._onMainboardReady.bind(this));
 
         this.socket.emit('initialData', application.initialData());
-        application.addMainboard(this);
     },
 
     emitServer: function(event, data) {

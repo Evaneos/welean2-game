@@ -10,8 +10,6 @@ var path = require('path');
 var generator = require('springbokjs-utils/generator');
 
 var SocketApplication = require('./models/sockets/Application');
-var SocketUser = require('./models/sockets/User');
-var SocketMainboard = require('./models/sockets/Mainboard');
 
 
 var argv = require('minimist')(process.argv.slice(2), {
@@ -63,14 +61,8 @@ require('./socket')(server, argv, function(io) {
             if (!game) {
                 throw new Error("Impossible de créer l'application");
             }
-            //TODO factory in SocketApplication
-
             try {
-                if (data.client == 'board') {
-                    new SocketMainboard(game, socket, data);
-                } else if (data.client == 'device') {
-                    new SocketUser(game, socket, data);
-                }
+                game.addClient(socket, data);
             } catch(e) {
                 console.error(e.stack || e.message);
             }

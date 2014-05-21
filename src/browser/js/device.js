@@ -88,6 +88,22 @@ function main() {
     });
 
 
+    socket.on('initialData', (data) => {
+        console.log('initialData', data);
+        if (data.started) {
+            welcomeScreen.hide();
+            gameScreen.show();
+            // TODO: state of the board: with cards
+            myTurn = data.myturn;
+            if (myTurn) {
+                popup.display('A ton tour');
+            }
+        }
+        if (data.applicationState.state === 'paused') {
+            popup.display('PAUSE', true);
+        }
+    });
+
     socket.on('application:started', function(username) {
         log("Start");
         vibrate([30, 30, 30]);
@@ -95,6 +111,14 @@ function main() {
         gameScreen.show();
         myTurn = true;
     });
+    socket.on('application:paused', () => {
+        popup.display('PAUSE', true);
+    });
+    socket.on('application:unpaused', () => {
+        popup.display('Pause terminée');
+    });
+
+
     socket.on('application:ended', function() {
         readyInfo.hide();
         buttonReady.show();

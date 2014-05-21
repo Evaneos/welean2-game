@@ -22,19 +22,11 @@ User.extendPrototype({
     },
     reconnect() {
         this.connected = true;
-        if (this.deleteTimeoutID !== undefined) {
-            clearTimeout(this.deleteTimeoutID);
-            delete this.deleteTimeoutID;
-        }
         this.$eltList.css('text-decoration', 'none');
 
     },
-    disconnect(callbackDeleted) {
+    disconnect() {
         this.$eltList.css('text-decoration', 'line-through');
-        this.deleteTimeoutID = setTimeout(() => {
-            this.delete();
-            callbackDeleted();
-        }, 10000);
     },
     delete() {
         this.$eltList.fadeOut(1000, function() { $(this).remove(); });
