@@ -25,9 +25,9 @@ Application.defineProperty('states', Object.freeze({
 }));
 
 Application.extendPrototype({
-    construct(app) {
-        this.token = app.token;
-        applicationsMap[app.token] = app;
+    construct(token, app) {
+        this.token = token;
+        applicationsMap[token] = app;
         this.app = app;
         this.mainboards = [];
         this.users = [];

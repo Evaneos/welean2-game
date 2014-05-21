@@ -5,8 +5,7 @@ Room.defineProperty("states", { WAITING_FOR_USERS : 1, MIN_USERS_REACHED : 2, RO
 Room.defineProperty("statesValues", Object.keys(Room.states).map((v) => Room.states[v]));
 
 Room.extendPrototype({
-    construct(token, usersMax, usersMin=0) {
-        this.token = token;
+    construct(usersMax, usersMin=0) {
         this.usersMax = usersMax;
         this.usersMin = usersMin;
         this.users = {};

@@ -5,9 +5,8 @@ var Application = S.extendClass(require("events").EventEmitter);
 module.exports = Application;
 
 Application.extendPrototype({
-    construct(token, options = {}) {
-        this.token = token;
-        this.room = new Room(token, options.usersMax, options.usersMin);
+    construct(options = {}) {
+        this.room = new Room(options.usersMax, options.usersMin);
         this.started  = false;
     },
     start() {
@@ -16,7 +15,7 @@ Application.extendPrototype({
             S.forEach(this.room.users, (player) => {
                 player.activate();
             });
-            
+
             this.started = true;
             this.emit('started');
             this.run();
@@ -28,7 +27,7 @@ Application.extendPrototype({
         this.start();
     },
     canBeStarted() {
-        return this.room.ready() && this.started === false;
+        return this.started === false;
     },
     run() {
         console.log("I am an abstract application, don't run me, moron!");
@@ -43,7 +42,6 @@ Application.extendPrototype({
             userObj = user;
         } else if (S.isString(user)) {
             userObj = new User(user);
-            
         } else {
             throw new Error("application.user.badType");
         }
@@ -54,6 +52,5 @@ Application.extendPrototype({
         this.room.removeUser(user);
     },
     delete() {
-        
     }
 });
