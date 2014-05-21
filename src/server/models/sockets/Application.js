@@ -47,6 +47,16 @@ Application.extendPrototype({
             this.emitToMainBoards('round:ended', {});
         });
 
+        app.on('allPlayersPlayed', () => {
+            setTimeout(() => {
+                this.app.endRound();
+            });
+        });
+
+        app.on('roundFinalized', (fn) => {
+            fn();
+        });
+
         app.on('roundStarted', (roundNumber, players) => {
             var names = players.map((u) => u.name);
             this.mainboards.forEach((mainboard) => {
