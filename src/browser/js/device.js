@@ -41,7 +41,10 @@ function main() {
     mydeck.on('touchstart', function() {
         
     });
-    mydeck.on('touchend', function() {
+    mydeck.on('touchend', play);
+    mydeck.on('click', play);
+    
+    function play() {
         if (myTurn) {
             log('You played a card');
 
@@ -63,7 +66,7 @@ function main() {
 
             myTurn = false;
         }
-    });
+    }
 
     // Events
     socket.on('player:connected', function(username) {
