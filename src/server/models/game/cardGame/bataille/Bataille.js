@@ -19,7 +19,15 @@ Bataille.extendPrototype({
         this.deck = new ClassicDeck(this.deckSize);
         this.emit("deckBuilt", this.deck);
     },
+    reset() {
+        Bataille.super_.reset.call(this);
+        this.toWin = [];
+    },
+    deal(numberPerPlayer=0) {
+        Bataille.super_.deal.call(this, numberPerPlayer);
+    },
     run() {
+        Bataille.super_.run.call(this);
         this.shuffleDeck();
         this.deal();
         this.startRound();

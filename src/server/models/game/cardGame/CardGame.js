@@ -10,7 +10,6 @@ CardGame.extendPrototype({
         CardGame.superConstruct.apply(this, arguments);
 
         this.maxRounds = options.maxRounds || 50;
-        this.reset();
 
         this.room.on("userAdded", (player) => {
             player.on("played", (card) => {
@@ -22,6 +21,9 @@ CardGame.extendPrototype({
         });
     },
     reset() {
+        S.forEach(this.room.users, (player) => {
+            player.hand = [];
+        });
         this.buildDeck();
         this.currentCards = [];
         this.playersForRound = [];
@@ -31,6 +33,7 @@ CardGame.extendPrototype({
         this.cardsPlayers = {};
     },
     run() {
+        this.reset();
         console.log("Let's Play !");
     },
     end() {
