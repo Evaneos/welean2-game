@@ -9,7 +9,7 @@
             <script src="<%= basepath %>dist/es5-compat.js"></script>
             <script src="<%= basepath %>dist/es6-compat.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<%= basepath %>socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="http://<%= domainName.split(':')[0] %>:3300/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="<%= basepath %>dist/board.js"></script>
         <script type="text/javascript" src="http://davidshimjs.github.io/qrcodejs/qrcode.min.js"></script>
         <script type="text/javascript">
@@ -45,8 +45,8 @@
     </body>
 
     <script type="text/javascript">
-        client = "board";
-        token = "<%= token %>";
+        window.client = "board";
+        window.token = "<%= token %>";
 
         // Generate qrcode
         new QRCode(document.getElementById("qrcode"), {text: playUrl, width: 250, height: 250});

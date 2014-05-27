@@ -11,6 +11,6 @@ module.exports = function(req, res) {
         res.render(app.self.gameKey + '/device/auth', { });
     }
     else {
-        res.render(app.self.gameKey + '/device/index', { name: user.name, token: token });
+        res.render(app.self.gameKey + '/device/index', { name: user.name, token: token, domainName: req.headers.host });
     }
 };

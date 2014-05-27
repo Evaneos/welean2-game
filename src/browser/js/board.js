@@ -33,7 +33,7 @@ function main() {
         logListParent.prop('scrollTop', logListParent.prop('scrollHeight'));
     };
 
-    var socket = io.connect('/');
+    var socket = io.connect('http://' + location.hostname + ':3300');
     global.socket = socket;
 
     // Join room

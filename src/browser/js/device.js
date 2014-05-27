@@ -13,7 +13,7 @@ function main() {
     var popup = new Popup();
     var token = window.token, client = window.client, name = window.name;
     console.log('DEVICE');
-    var socket = io.connect('/');
+    var socket = io.connect('http://' + location.hostname + ':3300');
     global.socket = socket;
     socket.emit('room:join', { token : token, client: client, name: name });
 

@@ -1,6 +1,9 @@
 var socketio = require('socket.io');
-module.exports = function(server, argv, cb) {
-    var io = socketio.listen(server);
+
+var SocketApplication = require('./models/sockets/Application');
+
+module.exports = function(argv) {
+    var io = socketio.listen(argv.websocketPort || 3300);
 
     /* #if PROD */
     if (argv.production) {
@@ -15,5 +18,19 @@ module.exports = function(server, argv, cb) {
     io.set('heartbeat timeout',120);
     io.set('heartbeat interval',300);
 
-    cb(io);
+    io.sockets.on('connection', function(socket) {
+        socket.on('connect', console.log.bind(console, 'connect'));
+        socket.on('connection', console.log.bind(console, 'connection'));
+        socket.on('room:join', function(data) {
+            var game = SocketApplication.getOrCreate(data.token);
+            if (!game) {
+                throw new Error("Impossible de créer l'application");
+            }
+            try {
+                game.addClient(socket, data);
+            } catch(e) {
+                console.error(e.stack || e.message);
+            }
+        });
+    });
 };

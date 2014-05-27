@@ -61,7 +61,7 @@ Application.extendPrototype({
                         return user.user.hand.length;
                     })
                 });
-            })
+            });
         });
 
         app.on('allPlayersPlayed', () => {

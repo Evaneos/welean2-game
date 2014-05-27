@@ -9,8 +9,6 @@ var cookieParser = require('cookie-parser');
 var path = require('path');
 var generator = require('springbokjs-utils/generator');
 
-var SocketApplication = require('./models/sockets/Application');
-
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -52,23 +50,7 @@ router.load(require('./config/route.js'));
 
 app.locals.basepath = argv.basepath || '/';
 
-require('./socket')(server, argv, function(io) {
-    io.sockets.on('connection', function(socket) {
-        socket.on('connect', console.log.bind(console, 'connect'));
-        socket.on('connection', console.log.bind(console, 'connection'));
-        socket.on('room:join', function(data) {
-            var game = SocketApplication.getOrCreate(data.token);
-            if (!game) {
-                throw new Error("Impossible de créer l'application");
-            }
-            try {
-                game.addClient(socket, data);
-            } catch(e) {
-                console.error(e.stack || e.message);
-            }
-        });
-    });
-});
+require('./socket')(argv);
 
 
 app.use(express.static(__dirname +'/../../public'));

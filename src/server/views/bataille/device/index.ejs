@@ -10,7 +10,7 @@
             <script src="<%= basepath %>dist/es5-compat.js"></script>
             <script src="<%= basepath %>dist/es6-compat.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<%= basepath %>socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="http://<%= domainName.split(':')[0] %>:3300/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="<%= basepath %>dist/device.js"></script>
     </head>
     <body class="device">
@@ -32,9 +32,9 @@
             </div>
         </div>
         <script type="text/javascript">
-            client = "device";
-            token = "<%= token %>";
-            name = "<%= name %>";
+            window.client = "device";
+            window.token = "<%= token %>";
+            window.name = "<%= name %>";
         </script>
     </body>
 </html>
